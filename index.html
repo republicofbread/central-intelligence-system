@@ -158,16 +158,16 @@
 
     <!-- Right Controls: Editable Backend Studio, Full Report Generator, Narrated Voice-Over Tour, Language Switcher (EN/SW/FR), Multi-Tenant Selector, Bell, Gear, KO Avatar -->
     <div class="flex items-center gap-2">
-      <!-- Editable Backend & Lakehouse Data Studio Button -->
-      <button
+      <!-- Dedicated Accessible Backend Portal Link -->
+      <a
         id="backend-studio-hdr-btn"
-        onclick="openBackendStudioModal()"
-        class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-600/25 hover:bg-purple-600/40 border border-purple-400/50 text-purple-200 font-semibold text-xs transition"
-        title="Open the Editable Backend Studio to create, edit, or delete AOIs, Loans, Documents, API Connectors, and SQL Lakehouse records"
+        href="backend.html"
+        class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-600/30 hover:bg-purple-600/50 border border-purple-400/50 text-purple-200 font-bold text-xs transition cursor-pointer shadow-xs"
+        title="Open the Dedicated Lakehouse & Database Management Portal"
       >
         <span>🗄️</span>
-        <span id="i18n-backend-btn">Editable Backend</span>
-      </button>
+        <span id="i18n-backend-btn">Backend Portal ↗</span>
+      </a>
 
       <!-- Full Multi-Domain Report Composer Button -->
       <button
@@ -266,6 +266,13 @@
             </span>
             <span class="text-[10px] uppercase font-bold text-blue-400 bg-blue-950/70 px-1.5 py-0.5 rounded border border-blue-500/30">Main</span>
           </button>
+          <a href="backend.html" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-[#181d33] hover:bg-[#212847] text-purple-200 border border-purple-500/30 font-semibold text-xs transition group cursor-pointer" title="Open the Dedicated Lakehouse & Database Management Portal">
+            <span class="flex items-center gap-2">
+              <span>🗄️</span>
+              <span class="group-hover:text-purple-300">Backend Portal</span>
+            </span>
+            <span class="text-[10px] uppercase font-bold text-purple-300 bg-purple-950/80 px-1.5 py-0.5 rounded border border-purple-500/40">CMS</span>
+          </a>
         </div>
 
         <!-- INTELLIGENCE DOMAINS -->
