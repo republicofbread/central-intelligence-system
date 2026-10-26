@@ -134,6 +134,9 @@
         <span class="px-2 py-0.5 text-xs font-bold uppercase tracking-wider rounded-full bg-[#152342] text-[#60a5fa] border border-[#3b82f6]/40">
           BETA
         </span>
+        <button onclick="switchToWelcome()" class="ml-1 px-2.5 py-1 rounded bg-[#162340] hover:bg-[#203158] text-slate-200 hover:text-white border border-slate-700/80 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer" title="Return to Main Homepage">
+          <span>🏠</span><span class="hidden sm:inline">Home</span>
+        </button>
       </div>
 
       <!-- Connected Atlas GIS & Live Web APIs Pills -->
@@ -239,11 +242,18 @@
     <!-- =================================================================== -->
     <aside class="w-[235px] shrink-0 bg-[#0d1323] border-r border-slate-800/80 flex flex-col justify-between text-slate-300 z-20">
       <div class="p-3.5 space-y-5 overflow-y-auto flex-1">
-        <!-- + New Intelligence Button -->
-        <div>
-          <button onclick="switchToWelcome()" class="w-full py-2 px-3 rounded-lg bg-[#4285f4] hover:bg-[#3367d6] text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition">
+        <!-- + New Intelligence Button & Home Button -->
+        <div class="space-y-1.5">
+          <button onclick="switchToWelcome()" class="w-full py-2 px-3 rounded-lg bg-[#4285f4] hover:bg-[#3367d6] text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition cursor-pointer">
             <span class="text-sm leading-none">+</span>
             <span id="i18n-new-intel-btn">New Intelligence</span>
+          </button>
+          <button onclick="switchToWelcome()" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-[#141d33] hover:bg-[#1d2a4a] text-slate-200 border border-slate-700/70 font-semibold text-xs transition group cursor-pointer" title="Return to Main Homepage">
+            <span class="flex items-center gap-2">
+              <span>🏠</span>
+              <span class="group-hover:text-blue-300">Canvas Home</span>
+            </span>
+            <span class="text-[10px] uppercase font-bold text-blue-400 bg-blue-950/70 px-1.5 py-0.5 rounded border border-blue-500/30">Main</span>
           </button>
         </div>
 
@@ -922,10 +932,13 @@
       <div class="px-5 py-3.5 bg-[#0c1324] text-white flex items-center justify-between">
         <h3 class="text-sm font-bold">🛰️ Data Plane — 12 Connected Free Web APIs, Satellite Catalogs & Enterprise Datasets</h3>
         <div class="flex items-center gap-2">
+          <button onclick="closeModal('connectors-modal'); switchToWelcome();" class="px-2.5 py-1 rounded bg-[#162340] hover:bg-[#203158] text-blue-300 border border-blue-500/40 text-xs font-semibold flex items-center gap-1 transition cursor-pointer" title="Return to Main Homepage">
+            <span>🏠</span><span>Canvas Home</span>
+          </button>
           <button onclick="testLiveBrowserAPIs()" id="btn-live-ping" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold">
             🔄 Ping Live Web APIs Now
           </button>
-          <button onclick="closeModal('connectors-modal')" class="text-slate-400 hover:text-white text-lg leading-none ml-2">&times;</button>
+          <button onclick="closeModal('connectors-modal')" class="text-slate-400 hover:text-white text-lg leading-none ml-2 cursor-pointer">&times;</button>
         </div>
       </div>
       <div id="live-ping-banner" class="px-5 py-2.5 bg-emerald-50 border-b border-emerald-200 text-xs text-emerald-900">
@@ -941,10 +954,13 @@
       <div class="px-5 py-3.5 bg-[#0c1324] text-white flex flex-wrap items-center justify-between gap-2">
         <h3 class="text-sm font-bold">📚 Governed Enterprise Knowledge Library & Cross-Document Conflict Viewer</h3>
         <div class="flex items-center gap-2">
+          <button onclick="closeModal('docs-library-modal'); switchToWelcome();" class="px-2.5 py-1 rounded bg-[#162340] hover:bg-[#203158] text-blue-300 border border-blue-500/40 text-xs font-semibold flex items-center gap-1 transition cursor-pointer" title="Return to Main Homepage">
+            <span>🏠</span><span>Canvas Home</span>
+          </button>
           <button onclick="downloadAllEnterpriseDocuments()" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition">
             ⬇️ Download All 5 Documents (.MD Bundle)
           </button>
-          <button onclick="closeModal('docs-library-modal')" class="text-slate-400 hover:text-white text-lg leading-none ml-2">&times;</button>
+          <button onclick="closeModal('docs-library-modal')" class="text-slate-400 hover:text-white text-lg leading-none ml-2 cursor-pointer">&times;</button>
         </div>
       </div>
       <div class="p-5 overflow-y-auto space-y-3 text-xs">
@@ -991,7 +1007,12 @@
     <div class="bg-white rounded-2xl max-w-2xl w-full border border-slate-200 shadow-2xl overflow-hidden">
       <div class="px-5 py-3.5 bg-[#0c1324] text-white flex items-center justify-between">
         <h3 class="text-sm font-bold">▲ Atlas GIS Cloud Workspace — Project FAyqMJBcNHRsuEHV8Iit</h3>
-        <button onclick="closeModal('atlas-modal')" class="text-slate-400 hover:text-white text-lg leading-none">&times;</button>
+        <div class="flex items-center gap-2">
+          <button onclick="closeModal('atlas-modal'); switchToWelcome();" class="px-2.5 py-1 rounded bg-[#162340] hover:bg-[#203158] text-blue-300 border border-blue-500/40 text-xs font-semibold flex items-center gap-1 transition cursor-pointer" title="Return to Main Homepage">
+            <span>🏠</span><span>Canvas Home</span>
+          </button>
+          <button onclick="closeModal('atlas-modal')" class="text-slate-400 hover:text-white text-lg leading-none ml-1 cursor-pointer">&times;</button>
+        </div>
       </div>
       <div class="p-5 space-y-3 text-xs text-slate-700">
         <div class="p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-blue-950">
@@ -1014,7 +1035,12 @@
     <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[88vh] flex flex-col border border-slate-200 shadow-2xl overflow-hidden">
       <div class="px-5 py-3.5 bg-[#0c1324] text-white flex items-center justify-between">
         <h3 class="text-sm font-bold">⚙️ FCL BLOOMTECH — Platform Administration, API Keys, Self-Learning & Governance</h3>
-        <button onclick="closeModal('admin-modal')" class="text-slate-400 hover:text-white text-lg leading-none">&times;</button>
+        <div class="flex items-center gap-2">
+          <button onclick="closeModal('admin-modal'); switchToWelcome();" class="px-2.5 py-1 rounded bg-[#162340] hover:bg-[#203158] text-blue-300 border border-blue-500/40 text-xs font-semibold flex items-center gap-1 transition cursor-pointer" title="Return to Main Homepage">
+            <span>🏠</span><span>Canvas Home</span>
+          </button>
+          <button onclick="closeModal('admin-modal')" class="text-slate-400 hover:text-white text-lg leading-none ml-1 cursor-pointer">&times;</button>
+        </div>
       </div>
 
       <!-- 5 Admin Tabs -->
@@ -1511,7 +1537,7 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
       const urlParams = new URLSearchParams(window.location.search);
       const recipient = urlParams.get('recipient') || urlParams.get('user') || '';
       const key = urlParams.get('key') || urlParams.get('auth') || urlParams.get('token') || '';
-      const stored = sessionStorage.getItem('fcl_auth_recipient');
+      const stored = sessionStorage.getItem('fcl_auth_recipient') || localStorage.getItem('fcl_auth_recipient');
 
       if (stored === 'keren_obara' || key === 'KO-2026-FCL' || recipient.toLowerCase().includes('keren') || key.toLowerCase().includes('ko-2026')) {
         grantKerenObaraAccess(false);
@@ -1535,7 +1561,10 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
     }
 
     function grantKerenObaraAccess(showToast = true) {
-      sessionStorage.setItem('fcl_auth_recipient', 'keren_obara');
+      try {
+        sessionStorage.setItem('fcl_auth_recipient', 'keren_obara');
+        localStorage.setItem('fcl_auth_recipient', 'keren_obara');
+      } catch (_) {}
       const modal = document.getElementById('keren-obara-auth-modal');
       if (modal) modal.classList.add('hidden');
       const badge = document.getElementById('keren-obara-user-badge');
@@ -1645,7 +1674,7 @@ ${doc.excerpt}
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ref KMD/FCST/05-2026/SO/03 — Official Seasonal Outlook & Intelligence Dossier</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"><\/script>
   <style>
     @media print {
       body { background: #fff !important; padding: 0 !important; }
@@ -1803,24 +1832,85 @@ ${doc.excerpt}
       runIntelligenceQuery(`Assess 90-day satellite NDVI change and rainfall anomaly in ${name}`, 'Satellite Intelligence', 'custom_user_aoi');
     }
 
-    function switchToWelcome() {
+    function switchToWelcome(updateHistory = true) {
       STATE.viewMode = 'welcome';
-      document.getElementById('welcome-canvas-view').classList.remove('hidden');
-      document.getElementById('results-canvas-view').classList.add('hidden');
-      document.getElementById('evidence-empty-view').classList.remove('hidden');
-      document.getElementById('evidence-populated-view').classList.add('hidden');
-      document.getElementById('evidence-count-badge').classList.add('hidden');
-      document.getElementById('toggle-results-pill-text').textContent = 'View with results →';
+
+      // 1. Safe DOM element updates
+      const welcome = document.getElementById('welcome-canvas-view');
+      const results = document.getElementById('results-canvas-view');
+      const emptyEv = document.getElementById('evidence-empty-view');
+      const popEv = document.getElementById('evidence-populated-view');
+      const evBadge = document.getElementById('evidence-count-badge');
+      const pillText = document.getElementById('toggle-results-pill-text');
+
+      if (welcome) welcome.classList.remove('hidden');
+      if (results) results.classList.add('hidden');
+      if (emptyEv) emptyEv.classList.remove('hidden');
+      if (popEv) popEv.classList.add('hidden');
+      if (evBadge) evBadge.classList.add('hidden');
+      if (pillText) pillText.textContent = 'View with results →';
+
+      // 2. Close any open overlays/modals that might block view
+      const modalsToClose = [
+        'full-report-modal', 'backend-studio-modal', 'atlas-modal',
+        'connectors-modal', 'docs-library-modal', 'custom-aoi-modal',
+        'upload-modal', 'admin-modal', 'cmd-modal', 'lineage-modal'
+      ];
+      modalsToClose.forEach(id => {
+        const m = document.getElementById(id);
+        if (m) m.classList.add('hidden');
+      });
+
+      // 3. Reset scroll position immediately on main scroll container & window
+      const mainEl = document.querySelector('main');
+      if (mainEl) mainEl.scrollTop = 0;
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
+      // 4. Update browser history state so browser Back/Forward works
+      if (updateHistory && window.history && window.history.pushState) {
+        try {
+          const url = new URL(window.location.href);
+          url.hash = 'home';
+          window.history.pushState({ view: 'welcome' }, '', url.toString());
+        } catch (e) {
+          console.warn('History pushState error:', e);
+        }
+      }
     }
 
-    function switchToResults() {
+    function switchToResults(updateHistory = true) {
       STATE.viewMode = 'results';
-      document.getElementById('welcome-canvas-view').classList.add('hidden');
-      document.getElementById('results-canvas-view').classList.remove('hidden');
-      document.getElementById('evidence-empty-view').classList.add('hidden');
-      document.getElementById('evidence-populated-view').classList.remove('hidden');
-      document.getElementById('evidence-count-badge').classList.remove('hidden');
-      document.getElementById('toggle-results-pill-text').textContent = '← Welcome state';
+
+      const welcome = document.getElementById('welcome-canvas-view');
+      const results = document.getElementById('results-canvas-view');
+      const emptyEv = document.getElementById('evidence-empty-view');
+      const popEv = document.getElementById('evidence-populated-view');
+      const evBadge = document.getElementById('evidence-count-badge');
+      const pillText = document.getElementById('toggle-results-pill-text');
+
+      if (welcome) welcome.classList.add('hidden');
+      if (results) results.classList.remove('hidden');
+      if (emptyEv) emptyEv.classList.add('hidden');
+      if (popEv) popEv.classList.remove('hidden');
+      if (evBadge) evBadge.classList.remove('hidden');
+      if (pillText) pillText.textContent = '← Welcome state';
+
+      // Reset scroll position to top of results
+      const mainEl = document.querySelector('main');
+      if (mainEl) mainEl.scrollTop = 0;
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
+      // Update browser history
+      if (updateHistory && window.history && window.history.pushState) {
+        try {
+          const url = new URL(window.location.href);
+          url.hash = 'results';
+          window.history.pushState({ view: 'results' }, '', url.toString());
+        } catch (e) {
+          console.warn('History pushState error:', e);
+        }
+      }
+
       setTimeout(() => {
         renderInteractiveMapCanvas();
         renderQuantitativeChart();
@@ -3830,22 +3920,43 @@ ${d.visibleLoans.map(l => `| \`${l.id}\` | ${l.borrower} | ${l.district} | ${l.c
               </div>
             </div>
             <div class="flex items-center gap-2">
+              <button onclick="closeModal('full-report-modal'); switchToWelcome();" class="px-3 py-1.5 rounded-lg bg-[#1a2642] hover:bg-[#23355e] text-blue-300 border border-blue-500/40 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer" title="Return to Canvas Home">
+                <span>🏠</span><span>Canvas Home</span>
+              </button>
               <button onclick="downloadFullReportMarkdown()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-600 text-xs font-semibold transition cursor-pointer">
-                ⬇️ Download Exhaustive .MD
+                ⬇️ Download .MD
               </button>
               <button onclick="downloadFullReportHTML()" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition cursor-pointer">
-                ⬇️ Download Official .HTML Dossier
+                ⬇️ Download .HTML
               </button>
               <button onclick="printFullReportDossier()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition cursor-pointer">
-                🖨️ Print / Save Official PDF
+                🖨️ Print / Save PDF
               </button>
-              <button onclick="closeModal('full-report-modal')" class="text-slate-400 hover:text-white text-xl leading-none ml-2 cursor-pointer">&times;</button>
+              <button onclick="closeModal('full-report-modal')" class="text-slate-400 hover:text-white text-xl leading-none ml-2 cursor-pointer" title="Close">&times;</button>
             </div>
           </div>
 
           <!-- Printable Report Body -->
-          <div id="full-report-printable-body" class="p-6 md:p-8 overflow-y-auto space-y-6 text-xs text-slate-800 bg-slate-50/70">
+          <div id="full-report-printable-body" class="p-6 md:p-8 overflow-y-auto space-y-6 text-xs text-slate-800 bg-slate-50/70 flex-1">
             ${dossierHtml}
+          </div>
+
+          <!-- Modal Bottom Action Bar -->
+          <div class="px-6 py-3 bg-[#0c1324] text-white flex flex-wrap items-center justify-between gap-3 shrink-0 border-t border-slate-800">
+            <button onclick="closeModal('full-report-modal'); switchToWelcome();" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-2 shadow transition cursor-pointer">
+              <span>←</span><span>Return to Canvas Home</span>
+            </button>
+            <div class="flex items-center gap-2">
+              <button onclick="downloadFullReportHTML()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold cursor-pointer">
+                Download Official HTML
+              </button>
+              <button onclick="printFullReportDossier()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold cursor-pointer">
+                🖨️ Print / Save PDF
+              </button>
+              <button onclick="closeModal('full-report-modal')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer">
+                Close
+              </button>
+            </div>
           </div>
         </div>
       `;
@@ -3868,7 +3979,7 @@ ${d.visibleLoans.map(l => `| \`${l.id}\` | ${l.borrower} | ${l.district} | ${l.c
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ref KMD/FCST/05-2026/SO/03 — Official Seasonal Outlook & Intelligence Dossier</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"><\/script>
   <style>
     @media print {
       body { background: #fff !important; padding: 0 !important; }
@@ -4228,8 +4339,11 @@ ${d.visibleLoans.map(l => `| \`${l.id}\` | ${l.borrower} | ${l.district} | ${l.c
                 </div>
               </div>
               <div class="flex items-center gap-2">
+                <button onclick="closeModal('backend-studio-modal'); switchToWelcome();" class="px-2.5 py-1 rounded bg-[#162340] hover:bg-[#203158] text-purple-300 border border-purple-500/40 text-xs font-semibold flex items-center gap-1 transition cursor-pointer" title="Return to Main Homepage">
+                  <span>🏠</span><span>Canvas Home</span>
+                </button>
                 <span id="backend-studio-status" class="hidden px-2.5 py-1 rounded bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-semibold">✓ Saved</span>
-                <button onclick="closeModal('backend-studio-modal')" class="text-slate-400 hover:text-white text-xl leading-none ml-2">&times;</button>
+                <button onclick="closeModal('backend-studio-modal')" class="text-slate-400 hover:text-white text-xl leading-none ml-2 cursor-pointer">&times;</button>
               </div>
             </div>
             <div class="flex flex-wrap gap-1 border-t border-slate-800 pt-2">
@@ -4488,6 +4602,59 @@ ${d.visibleLoans.map(l => `| \`${l.id}\` | ${l.borrower} | ${l.district} | ${l.c
       localStorage.removeItem('FCL_BLOOMTECH_BACKEND_STATE_V1');
       location.reload();
     }
+
+    // =========================================================================
+    // GLOBAL NAVIGATION & RESILIENCE CONTROLLERS (Home, Back, Escape, Modals)
+    // =========================================================================
+    // 1. Browser Back / Forward Button Handling
+    window.addEventListener('popstate', (e) => {
+      if (e.state && e.state.view === 'results') {
+        switchToResults(false);
+      } else {
+        switchToWelcome(false);
+      }
+    });
+
+    // 2. Global Escape Key: Closes any active modal or returns to homepage
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        let modalClosed = false;
+        const openModals = document.querySelectorAll('.fixed.inset-0:not(.hidden)');
+        openModals.forEach(m => {
+          if (m.id !== 'keren-obara-auth-modal') {
+            m.classList.add('hidden');
+            modalClosed = true;
+          }
+        });
+        if (!modalClosed && STATE.viewMode === 'results') {
+          switchToWelcome(true);
+        }
+      }
+    });
+
+    // 3. Modal Backdrop Click Dismissal
+    document.addEventListener('click', (e) => {
+      if (e.target && e.target.classList && e.target.classList.contains('fixed') && e.target.classList.contains('inset-0')) {
+        if (e.target.id !== 'keren-obara-auth-modal') {
+          e.target.classList.add('hidden');
+        }
+      }
+    });
+
+    // 4. Initial Hash Check on Page Load
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.location.hash === '#results' && STATE.currentResult) {
+        switchToResults(false);
+      } else {
+        // Ensure clean home view
+        const welcome = document.getElementById('welcome-canvas-view');
+        const results = document.getElementById('results-canvas-view');
+        if (welcome && results && STATE.viewMode === 'welcome') {
+          welcome.classList.remove('hidden');
+          results.classList.add('hidden');
+        }
+      }
+    });
   </script>
 </body>
 </html>
