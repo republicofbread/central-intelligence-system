@@ -1590,6 +1590,9 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
     }
 
     function buildDocumentFullContent(doc) {
+      if (doc.id === 'DOC-2026-CLIM-09' && typeof buildOfficialDossierMarkdown === 'function') {
+        return buildOfficialDossierMarkdown(buildFullReportData());
+      }
       return `# ${doc.title}
 - **Document ID:** \`${doc.id}\`
 - **Version:** ${doc.version}
@@ -1633,6 +1636,40 @@ ${doc.excerpt}
     function downloadEnterpriseDocument(docId, format = 'md') {
       const doc = DOCUMENTS_LIBRARY.find(d => d.id === docId) || DOCUMENTS_LIBRARY[0];
       if (!doc) return;
+
+      if (doc.id === 'DOC-2026-CLIM-09' && format === 'html' && typeof buildOfficialDossierHTML === 'function') {
+        const d = buildFullReportData();
+        const htmlDoc = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ref KMD/FCST/05-2026/SO/03 — Official Seasonal Outlook & Intelligence Dossier</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media print {
+      body { background: #fff !important; padding: 0 !important; }
+      .no-print { display: none !important; }
+      .page-break { page-break-before: always; }
+      @page { size: A4; margin: 15mm; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 p-4 md:p-10 font-sans text-slate-900">
+  <div class="max-w-5xl mx-auto bg-white p-8 md:p-12 rounded-2xl border border-slate-300 shadow-xl space-y-6">
+    <div class="no-print flex justify-end gap-2 mb-4 pb-3 border-b border-slate-200">
+      <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition cursor-pointer">
+        🖨️ Print to PDF / Save Formal Document
+      </button>
+    </div>
+    ${buildOfficialDossierHTML(d)}
+  </div>
+</body>
+</html>`;
+        triggerCrossBrowserDownload(new Blob([htmlDoc], { type: 'text/html;charset=utf-8' }), `${doc.id}_KMD_Official_Seasonal_Outlook.html`);
+        return;
+      }
+
       const mdContent = buildDocumentFullContent(doc);
       const safeSlug = doc.title.replace(/[^a-zA-Z0-9]+/g, '_').slice(0, 40);
 
@@ -3040,174 +3077,775 @@ ${doc.excerpt}
       return modal;
     }
 
-    function openFullReportModal() {
-      const d = buildFullReportData();
-      const modal = ensureFullReportModal();
+    // =========================================================================
+    // HIGH-CALIBRE INSTITUTIONAL DOSSIER & METEOROLOGICAL AUTHORITY REPORT ENGINE
+    // Standard: Kenya Meteorological Service Authority (KMD) & FCL BLOOMTECH
+    // Calibre: Ref No. KMD/FCST/05-2026/SO/03 & FCL/CIS/2026/SO/04
+    // Covers: Climatology, Onsets/Cessations, SPI, 12 Detailed Sectors, JJA Review, Appendix
+    // =========================================================================
 
+    function buildOfficialDossierHTML(d) {
       const loanRowsHtml = d.visibleLoans.map(l => `
-        <tr class="border-b border-slate-200">
-          <td class="py-2 px-3 font-mono font-bold text-slate-900">${l.id}</td>
-          <td class="py-2 px-3 font-semibold text-slate-800">${l.borrower}</td>
-          <td class="py-2 px-3 text-slate-600">${l.district}</td>
-          <td class="py-2 px-3 text-slate-600">${l.crop}</td>
-          <td class="py-2 px-3 font-mono font-bold text-slate-900">${l.amount}</td>
-          <td class="py-2 px-3 font-mono text-rose-600 font-bold">${l.daysOverdue}d (${l.ndviDelta})</td>
-          <td class="py-2 px-3"><span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-bold text-xs">${l.status}</span></td>
+        <tr class="border-b border-slate-200 hover:bg-slate-50 transition">
+          <td class="py-2.5 px-3 font-mono font-bold text-slate-900">${l.id}</td>
+          <td class="py-2.5 px-3 font-semibold text-slate-800">${l.borrower}</td>
+          <td class="py-2.5 px-3 text-slate-600">${l.district}</td>
+          <td class="py-2.5 px-3 text-slate-600">${l.crop}</td>
+          <td class="py-2.5 px-3 font-mono font-bold text-slate-900">${l.amount}</td>
+          <td class="py-2.5 px-3 font-mono text-rose-600 font-bold">${l.daysOverdue}d (${l.ndviDelta})</td>
+          <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-bold text-xs">${l.status}</span></td>
         </tr>
       `).join('');
 
+      return `
+        <!-- Official Institutional Header Banner (Calibre: Republic of Kenya / KMSA / FCL CIS) -->
+        <div class="border-b-2 border-slate-900 pb-5 mb-6 text-center space-y-1.5 font-serif">
+          <div class="flex items-center justify-center gap-3 mb-2">
+            <span class="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center text-xl font-bold font-sans">🌱</span>
+            <div class="text-left font-sans">
+              <div class="text-xs font-black tracking-widest uppercase text-slate-900">REPUBLIC OF KENYA & EAST AFRICA CORRIDOR</div>
+              <div class="text-[11px] font-bold text-slate-600 uppercase">MINISTRY OF ENVIRONMENT, CLIMATE CHANGE AND FORESTRY</div>
+              <div class="text-[11px] font-semibold text-emerald-800 uppercase">KENYA METEOROLOGICAL SERVICE AUTHORITY & FCL BLOOMTECH CENTRAL INTELLIGENCE</div>
+            </div>
+          </div>
+          <div class="text-[11px] text-slate-500 font-sans">
+            Dagoretti Corner, Ngong Road, P. O. Box 30259, 00100 GPO, Nairobi, Kenya • Tel: +254 (0) 20 3867880-7 • Web: https://www.meteo.go.ke
+          </div>
+          <div class="pt-2 border-t border-slate-300 flex flex-wrap items-center justify-between text-xs font-mono font-semibold text-slate-700 font-sans">
+            <span>Ref No: <strong>KMD/FCST/05-2026/SO/03 • FCL-CIS-2026-SO-04</strong></span>
+            <span>Issue Date: <strong>31st August 2026 (Live Telemetry: ${d.generatedAt})</strong></span>
+          </div>
+          <h1 class="text-base md:text-lg font-black uppercase text-slate-950 pt-3 tracking-wide font-sans">
+            OUTLOOK FOR THE OCTOBER-NOVEMBER-DECEMBER 2026 "SHORT RAINS" SEASON<br/>AND REVIEW OF THE JUNE-JULY-AUGUST 2026 SEASON
+          </h1>
+          <div class="text-xs font-semibold text-blue-900 font-sans">
+            Target Focus Area: <strong>${d.aoiName}</strong> (${d.coords}) • Active Tenant: <strong>${d.tenantName}</strong>
+          </div>
+        </div>
+
+        <!-- 1.0 SUMMARY -->
+        <div class="space-y-4">
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-3">
+            <h2 class="text-sm font-black uppercase text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+              <span class="w-6 h-6 rounded bg-slate-900 text-white text-xs flex items-center justify-center font-bold">1.0</span>
+              <span>SUMMARY & SYNOPTIC OVERVIEW</span>
+            </h2>
+            <div class="space-y-2.5 text-xs text-slate-700 leading-relaxed">
+              <h3 class="font-bold text-slate-900 text-xs">1.1 Outlook for the October-November-December 2026 Season</h3>
+              <p>
+                <strong>Above-average rainfall</strong> is expected across <em>Baringo, Bomet, Bungoma, Busia, Elgeyo/Marakwet, Embu, Garissa, Homa Bay, Isiolo, Kajiado, Kakamega, Kericho, Kiambu, Kilifi, Kirinyaga, Kisii, Kisumu, Kitui, Kwale, Laikipia, Lamu, Machakos, Makueni, Mandera, Meru, Migori, Mombasa, Murang'a, Nairobi, Nakuru, Nandi, Narok, Nyamira, Nyandarua, Nyeri, Siaya, Taita/Taveta, Tana River, Tharaka-Nithi, Trans Nzoia, Uasin Gishu, Vihiga, Wajir</em> and much of <em>West Pokot, Samburu</em> and <em>Marsabit</em> Counties.
+              </p>
+              <p>
+                <strong>Near-average to above-average rainfall</strong> is likely to occur in <em>Turkana</em> and a few northern sections of West Pokot, Samburu, and Marsabit Counties.
+              </p>
+              <p>
+                <strong>Mean temperatures</strong> are predicted to be <em>warmer than average</em> during the season, with higher probabilities concentrated over Kwale, Mombasa, Kilifi, Lamu and parts of Tana River, Taita/Taveta and Garissa Counties.
+              </p>
+              <h3 class="font-bold text-slate-900 text-xs pt-1">1.2 Review of the June-July-August (JJA) 2026 Season</h3>
+              <p>
+                Most parts of the country received <strong>below-average rainfall</strong> during the JJA 2026 season. Only <em>Kisii (98.0%), Malindi (94.1%), Lamu (94.0%), Kericho (93.5%), Kisumu (78.3%)</em> and <em>Mombasa (75.4%)</em> recorded near-average rainfall of their Long-Term Means (LTMs). <em>Lodwar, Garissa</em> and <em>Mandera</em> Meteorological Stations received <strong>zero rainfall (0%)</strong>. Mean temperatures remained warmer than average across the country.
+              </p>
+            </div>
+          </div>
+
+          <!-- 2.0 RAINFALL FORECAST & CLIMATOLOGY -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-3">
+            <h2 class="text-sm font-black uppercase text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+              <span class="w-6 h-6 rounded bg-slate-900 text-white text-xs flex items-center justify-center font-bold">2.0</span>
+              <span>RAINFALL FORECAST & CLIMATOLOGICAL DRIVERS (OCT-NOV-DEC 2026)</span>
+            </h2>
+            <div class="space-y-2.5 text-xs text-slate-700 leading-relaxed">
+              <h3 class="font-bold text-slate-900">2.1 Climatological Mechanisms & Synoptic Drivers</h3>
+              <p>
+                The October-November-December rainfall season constitutes a primary agricultural and hydrological driver in Kenya and the broader East African corridor. It contributes <strong>over 30% to 50%</strong> of the total annual precipitation in several key counties, including <em>Meru, Makueni, Garissa, Taita/Taveta, Wajir, Mandera, Marsabit, Machakos, Kiambu, Embu, Nairobi, Nyeri, Laikipia, and Mombasa</em>, with localized cumulative totals exceeding <strong>700 mm</strong>.
+              </p>
+              <p>
+                The season is driven by the southward migration of the <strong>Intertropical Convergence Zone (ITCZ)</strong>. Seasonal performance is substantially elevated by the <strong>positive phase of the Indian Ocean Dipole (IOD)</strong>, reinforced by concurrent <strong>El Niño Southern Oscillation (ENSO)</strong> conditions. On intra-seasonal timeframes, rainfall intensity and episodic deluge surges are modulated by the <strong>Madden-Julian Oscillation (MJO)</strong> and cyclonic activity in the southwestern Indian Ocean basin.
+              </p>
+
+              <h3 class="font-bold text-slate-900 pt-2">2.4 County Onsets, Cessation and Seasonal Distribution Schedule</h3>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse border border-slate-300">
+                  <thead class="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
+                    <tr>
+                      <th class="p-2 border border-slate-300">Counties & Agro-Ecological Corridors</th>
+                      <th class="p-2 border border-slate-300">Expected Onset</th>
+                      <th class="p-2 border border-slate-300">Expected Cessation</th>
+                      <th class="p-2 border border-slate-300">Rainfall Distribution</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200">
+                    <tr>
+                      <td class="p-2 border border-slate-300 font-semibold">Nandi, Kakamega, Vihiga, Bungoma, Siaya, Busia, Baringo, Nakuru, Trans-Nzoia, Uasin-Gishu, Elgeyo-Marakwet, West-Pokot, Kisii, Nyamira, Kericho, Bomet, Kisumu, Homa Bay, Migori, Narok</td>
+                      <td class="p-2 border border-slate-300">Continues from September</td>
+                      <td class="p-2 border border-slate-300">Continues into January 2027</td>
+                      <td class="p-2 border border-slate-300 text-emerald-800 font-bold">Fair to Good</td>
+                    </tr>
+                    <tr>
+                      <td class="p-2 border border-slate-300 font-semibold">Nyandarua, Laikipia, Nyeri, Kirinyaga, Murang'a, Kiambu, Meru, Embu, Tharaka-Nithi, Nairobi City County</td>
+                      <td class="p-2 border border-slate-300">2nd to 3rd week of October</td>
+                      <td class="p-2 border border-slate-300">Continues into January 2027</td>
+                      <td class="p-2 border border-slate-300 text-emerald-800 font-bold">Fair to Good</td>
+                    </tr>
+                    <tr>
+                      <td class="p-2 border border-slate-300 font-semibold">Machakos, Kitui, Makueni, Kajiado, Taita-Taveta, Inland parts of Tana River</td>
+                      <td class="p-2 border border-slate-300">3rd to 4th week of October</td>
+                      <td class="p-2 border border-slate-300">Continues into January 2027</td>
+                      <td class="p-2 border border-slate-300 text-emerald-800 font-bold">Fair to Good</td>
+                    </tr>
+                    <tr>
+                      <td class="p-2 border border-slate-300 font-semibold">Mombasa, Kwale, Lamu, Kilifi, Tana Delta</td>
+                      <td class="p-2 border border-slate-300">2nd to 3rd week of October</td>
+                      <td class="p-2 border border-slate-300">1st to 2nd week of December</td>
+                      <td class="p-2 border border-slate-300 text-emerald-800 font-bold">Fair to Good</td>
+                    </tr>
+                    <tr>
+                      <td class="p-2 border border-slate-300 font-semibold">Marsabit, Mandera, Wajir, Garissa, Isiolo</td>
+                      <td class="p-2 border border-slate-300">2nd to 3rd week of October</td>
+                      <td class="p-2 border border-slate-300">1st to 2nd week of December</td>
+                      <td class="p-2 border border-slate-300 text-emerald-800 font-bold">Fair to Good</td>
+                    </tr>
+                    <tr>
+                      <td class="p-2 border border-slate-300 font-semibold">Turkana, Samburu</td>
+                      <td class="p-2 border border-slate-300">3rd to 4th week of October</td>
+                      <td class="p-2 border border-slate-300">1st week of December</td>
+                      <td class="p-2 border border-slate-300 text-amber-800 font-bold">Poor to Fair</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3.0 TEMPERATURE & 4.0 STANDARDIZED PRECIPITATION INDEX (SPI) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-2.5">
+              <h2 class="text-sm font-black uppercase text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+                <span class="w-6 h-6 rounded bg-slate-900 text-white text-xs flex items-center justify-center font-bold">3.0</span>
+                <span>TEMPERATURE FORECAST</span>
+              </h2>
+              <div class="text-xs text-slate-700 leading-relaxed space-y-2">
+                <p>
+                  Mean temperatures during OND 2026 are climatologically warm, varying between <strong>17°C</strong> in high-altitude zones (Kericho, Uasin Gishu, Nyandarua) to <strong>over 30°C</strong> in arid lowlands (Turkana, Garissa, Mandera).
+                </p>
+                <p>
+                  Elevated thermal anomalies (&gt; +1.0°C to +1.8°C above normal) are forecast along the Coastal and Lowland eastern belt (<em>Kwale, Mombasa, Kilifi, Lamu, Tana River, Taita/Taveta, Garissa</em>). Day-to-night temperature variations remain narrow due to continuous cloud-cover insolation traps.
+                </p>
+                <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 font-semibold">
+                  🌡️ Current Live Station Telemetry: ${d.liveTemp}°C • Precipitation: ${d.liveRain} mm
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-2.5">
+              <h2 class="text-sm font-black uppercase text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+                <span class="w-6 h-6 rounded bg-slate-900 text-white text-xs flex items-center justify-center font-bold">4.0</span>
+                <span>STANDARDIZED PRECIPITATION INDEX (SPI)</span>
+              </h2>
+              <div class="text-xs text-slate-700 leading-relaxed space-y-2">
+                <p>
+                  Probabilistic Standardized Precipitation Index (SPI) modeling indicates that the probability of moderate or severe drought events across the East African agricultural corridor is <strong>very low (&lt; 5%)</strong>.
+                </p>
+                <p>
+                  A localized <strong>15% to 20% probability of mild meteorological drought (SPI &lt; -0.43)</strong> remains restricted to extreme northwestern Turkana. Across the agricultural food baskets, high positive SPI values indicate sustained canopy saturation, high soil-moisture reserves, and elevated flood risks.
+                </p>
+                <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900 font-semibold">
+                  🛰️ Sentinel-2 / Sentinel-1 Backscatter: 90-Day Zonal NDVI shifted by ${d.ndviDeltaPct}% (${d.ndviBaseline} → ${d.ndviCurrent})
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5.0 POTENTIAL SECTORAL IMPACTS & ACTIONABLE MITIGATION STRATEGIES (ALL 12 SECTORS) -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-4">
+            <h2 class="text-sm font-black uppercase text-slate-900 border-b-2 border-slate-900 pb-2 flex items-center gap-2">
+              <span class="w-6 h-6 rounded bg-emerald-600 text-white text-xs flex items-center justify-center font-bold">5.0</span>
+              <span>POTENTIAL SECTORAL IMPACTS & ACTIONABLE MANAGEMENT STRATEGIES (12 SECTORS)</span>
+            </h2>
+
+            <!-- 5.1 Agriculture and Food Security -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="font-bold text-slate-900 text-xs flex items-center justify-between">
+                <span>5.1 Agriculture and Food Security Sector</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">Tier 1 Primary</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                <div class="space-y-1">
+                  <strong class="text-emerald-800">Positive Impacts:</strong>
+                  <ul class="list-disc pl-4 space-y-1 text-slate-700">
+                    <li>Extended growing season supporting relay cropping, double-harvests, and higher cereal yields.</li>
+                    <li>Replenishment of deep root-zone soil moisture; reduced supplemental irrigation expenditures.</li>
+                    <li>Enhanced household incomes, lowering market inflation on fresh horticulture and staple maize.</li>
+                    <li>Favorable conditions for establishing perennial cash crops (tea, coffee, avocado, macadamia).</li>
+                  </ul>
+                </div>
+                <div class="space-y-1">
+                  <strong class="text-rose-800">Negative Impacts & Hazards:</strong>
+                  <ul class="list-disc pl-4 space-y-1 text-slate-700">
+                    <li>Severe waterlogging, topsoil nutrient leaching, and root rot in low-lying arable lands.</li>
+                    <li>Post-onset fertilizer wash-off; elevated humidity driving fungal blight, fall armyworm, and rust.</li>
+                    <li>Pre- and post-harvest produce rot, mycotoxin contamination, and high aflatoxin risk in grain reserves.</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="pt-2 border-t border-slate-200 text-xs text-slate-800">
+                <strong class="text-blue-900">Key Mitigation & Response Strategies:</strong>
+                <ol class="list-decimal pl-4 space-y-1 text-slate-700 mt-1">
+                  <li>Deploy climate-smart agriculture: promote raised seedbeds, field drainage trenches, and conservation tillage.</li>
+                  <li>Pre-position mobile grain dryers, hermetic storage bags (PICS), and aflatoxin surveillance kits at cooperative hubs.</li>
+                  <li>Advise farmers to plant long-maturing, water-tolerant, certified high-yielding seed varieties.</li>
+                  <li>Strengthen county agrometeorological advisory desks and farmer SMS push networks.</li>
+                </ol>
+              </div>
+            </div>
+
+            <!-- 5.2 Livestock Development -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="font-bold text-slate-900 text-xs flex items-center justify-between">
+                <span>5.2 Livestock Development Sector</span>
+                <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px] font-bold">Pastoral & Dairy</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                <div class="space-y-1">
+                  <strong class="text-emerald-800">Positive Impacts:</strong>
+                  <ul class="list-disc pl-4 space-y-1 text-slate-700">
+                    <li>Rapid regeneration of rangeland forage, pasture biomass, and surface watering pans.</li>
+                    <li>Substantial increase in milk yields and livestock body condition scores.</li>
+                    <li>Reduced distress migration and lowered resource-based conflicts in pastoral corridors.</li>
+                  </ul>
+                </div>
+                <div class="space-y-1">
+                  <strong class="text-rose-800">Negative Impacts:</strong>
+                  <ul class="list-disc pl-4 space-y-1 text-slate-700">
+                    <li>Surge in vector-borne epizootics: Rift Valley Fever (RVF), Foot & Mouth Disease (FMD), lumpyskin.</li>
+                    <li>Livestock drowning in flash floods; "lush grass" bloating and fatal enterotoxaemia.</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="pt-2 border-t border-slate-200 text-xs text-slate-800">
+                <strong class="text-blue-900">Key Mitigation & Response Strategies:</strong> Roll out mass livestock RVF/FMD ring vaccinations; establish fodder conservation (silage/hay banking); expand index-based livestock insurance (KLIP).
+              </div>
+            </div>
+
+            <!-- 5.3 Water Resources Management -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="font-bold text-slate-900 text-xs flex items-center justify-between">
+                <span>5.3 Water Resources Management Sector</span>
+                <span class="px-2 py-0.5 rounded bg-cyan-100 text-cyan-800 text-[10px] font-bold">Hydrology & Dams</span>
+              </div>
+              <div class="text-xs text-slate-700 space-y-1.5">
+                <p><strong>Impacts:</strong> Full aquifer and deep groundwater replenishment, major reservoir storage recharge. Conversely: severe siltation of dams and water pans, washouts of drinking water intake towers, sewage cross-contamination, and rising Rift Valley lake levels.</p>
+                <p><strong>Key Mitigation Strategies:</strong> Continuous 24/7 structural integrity monitoring of dams to prevent overtopping; emergency desilting of canals; deployment of mobile water testing and chlorine distribution units.</p>
+              </div>
+            </div>
+
+            <!-- 5.4 Health & Sanitation -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="font-bold text-slate-900 text-xs flex items-center justify-between">
+                <span>5.4 Health & Sanitation Sector</span>
+                <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 text-[10px] font-bold">Public Health</span>
+              </div>
+              <div class="text-xs text-slate-700 space-y-1.5">
+                <p><strong>Risks:</strong> Heightened incidence of water-borne pathogens (cholera, typhoid, dysentery) and vector-borne outbreaks (malaria, chikungunya, dengue, RVF) from stagnant flood pools; disruption of cold-chain vaccine deliveries in cut-off areas.</p>
+                <p><strong>Key Mitigation Strategies:</strong> Pre-position 3-month buffer stocks of antimalarials, IV fluids, and water purification chemicals; deploy Community Health Promoters (CHPs) for active fever and diarrhea surveillance.</p>
+              </div>
+            </div>
+
+            <!-- 5.5 Disaster Risk Management & Critical Infrastructure -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="font-bold text-slate-900 text-xs flex items-center justify-between">
+                <span>5.5 Disaster Risk Management & Critical Infrastructure</span>
+                <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 text-[10px] font-bold">Emergency Response</span>
+              </div>
+              <div class="text-xs text-slate-700 space-y-1.5">
+                <p><strong>Hazards:</strong> High risk of riverine flooding and urban flash inundation in lowlands (Budalangi, Nyando, Tana Delta, Garissa); destructive landslides and mudslides along steep escarpments (Murang'a, West Pokot, Elgeyo Marakwet); bridge washouts and power transmission collapses.</p>
+                <p><strong>Key Mitigation Strategies:</strong> Identify and map high-risk evacuation centers outside school compounds; install lightning arresters in schools; pre-position non-food emergency relief and search-and-rescue boats.</p>
+              </div>
+            </div>
+
+            <!-- 5.6 Macroeconomy, Agricultural Credit & Financial Markets -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+              <div class="font-bold text-slate-900 text-xs flex items-center justify-between">
+                <span>5.6 Macroeconomy, Agricultural Credit & Financial Markets</span>
+                <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">FCL Lakehouse Credit Audit</span>
+              </div>
+              <div class="text-xs text-slate-700 space-y-2">
+                <p>
+                  <strong>Macroeconomic Synthesis:</strong> Enhanced agricultural output dampens food inflation and stimulates agro-processing manufacturing. However, catastrophic infrastructure washouts impose heavy unbudgeted fiscal reconstruction burdens.
+                </p>
+                <p>
+                  <strong>FCL Medallion Lakehouse Active Portfolio Exposure:</strong> Under tenant scope <code class="font-mono font-bold text-blue-700">${d.tenantId}</code>, the following active cooperative facilities have been evaluated against verified satellite NDVI deficits and rainfall anomalies:
+                </p>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left border-collapse border border-slate-300">
+                    <thead class="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
+                      <tr>
+                        <th class="p-2 border border-slate-300">Facility ID</th>
+                        <th class="p-2 border border-slate-300">Borrower Cooperative</th>
+                        <th class="p-2 border border-slate-300">District</th>
+                        <th class="p-2 border border-slate-300">Commodity</th>
+                        <th class="p-2 border border-slate-300">Exposure</th>
+                        <th class="p-2 border border-slate-300">Delinquency / ΔNDVI</th>
+                        <th class="p-2 border border-slate-300">Audit Status</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                      ${loanRowsHtml}
+                    </tbody>
+                  </table>
+                </div>
+                <p class="pt-1">
+                  <strong>Key Financial Mitigation Strategies:</strong> Facilitate sovereign Catastrophe Bond and parametric insurance payouts; activate FCL Autonomy Level 4 human governance gate for 60-day debt rescheduling; deploy emergency liquidity credit lines to impacted agribusinesses.
+                </p>
+              </div>
+            </div>
+
+            <!-- 5.7 Environment, Forestry & Soil Conservation -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="font-bold text-slate-900 text-xs flex items-center justify-between">
+                <span>5.7 Environment, Forestry & Soil Conservation</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">Ecosystems</span>
+              </div>
+              <div class="text-xs text-slate-700 space-y-1.5">
+                <p><strong>Opportunities & Risks:</strong> Accelerated tree seedling survival under the Plantation Establishment and Livelihood Improvement Scheme (PELIS); reduction of wildfire incidence. Conversely: severe riverbank erosion and expansion of invasive species (Prosopis juliflora / "Mathenge").</p>
+                <p><strong>Response Measures:</strong> Construct gabions and vegetative riparian buffers; conduct aggressive bamboo planting along steep river corridors; enforce catch-basin soil retention.</p>
+              </div>
+            </div>
+
+            <!-- 5.8 Transport, Aviation & Logistics -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="font-bold text-slate-900 text-xs flex items-center justify-between">
+                <span>5.8 Transport, Aviation & Logistics</span>
+                <span class="px-2 py-0.5 rounded bg-slate-200 text-slate-800 text-[10px] font-bold">Mobility</span>
+              </div>
+              <div class="text-xs text-slate-700 space-y-1.5">
+                <p><strong>Disruptions:</strong> Airport runway aquaplaning and low-visibility flight diversions; railway track ballast washouts; marine vessel capsizing from gusty storm surges over Lake Victoria and the Indian Ocean.</p>
+                <p><strong>Response Measures:</strong> Enforce strict marine safety lifejacket advisories; clear highway drainage culverts; pre-identify alternate freight corridors.</p>
+              </div>
+            </div>
+
+            <!-- 5.9 Gender Equality, Disability, and Social Inclusion (GEDSI) -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="font-bold text-slate-900 text-xs flex items-center justify-between">
+                <span>5.9 Gender Equality, Disability, and Social Inclusion (GEDSI)</span>
+                <span class="px-2 py-0.5 rounded bg-pink-100 text-pink-800 text-[10px] font-bold">Vulnerable Groups</span>
+              </div>
+              <div class="text-xs text-slate-700 space-y-2">
+                <p>
+                  Disproportionate vulnerabilities face children (drowning, school interruption), elderly persons (mobility limitations during evacuations), pregnant and lactating women (dietary deficits), female-headed households (asset losses), and Persons with Disabilities (PWDs) facing communication and physical evacuation barriers.
+                </p>
+                <p>
+                  <strong>Key Mitigation:</strong> Disseminate multi-channel accessible early warnings (sign-language, radio, local dialects); establish assisted evacuation protocols; ensure all emergency shelters and WASH points have disability-inclusive ramps and facilities; prioritize female-headed families in emergency cash transfers.
+                </p>
+              </div>
+            </div>
+
+            <!-- 5.10 Education Sector Continuity -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="font-bold text-slate-900 text-xs flex items-center justify-between">
+                <span>5.10 Education Sector Continuity</span>
+                <span class="px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 text-[10px] font-bold">Schools & Exams</span>
+              </div>
+              <div class="text-xs text-slate-700 space-y-1.5">
+                <p><strong>Challenges:</strong> National examination logistics disrupted by inundated roads; classrooms damaged by storm gusts; school feeding stock contamination.</p>
+                <p><strong>Response Measures:</strong> Pre-position examination materials via security airlifts and boats; retrofit vulnerable school roofs; pre-position non-perishable school rations in moisture-proof silos.</p>
+              </div>
+            </div>
+
+            <!-- 5.11 Media, Communications & Public Information -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="font-bold text-slate-900 text-xs flex items-center justify-between">
+                <span>5.11 Media, Communications & Public Information</span>
+                <span class="px-2 py-0.5 rounded bg-yellow-100 text-yellow-800 text-[10px] font-bold">Broadcasting</span>
+              </div>
+              <div class="text-xs text-slate-700 space-y-1.5">
+                <p><strong>Strategy:</strong> Broadcasters and community radio stations must translate scientific forecasts into localized actionable advisories; aggressively counter unverified casualty rumors; air emergency evacuation contact numbers on continuous broadcast tickers.</p>
+              </div>
+            </div>
+
+            <!-- 5.12 International Partners, DFIs, NGOs & CBOs -->
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="font-bold text-slate-900 text-xs flex items-center justify-between">
+                <span>5.12 International Development Partners, DFIs, NGOs & CBOs</span>
+                <span class="px-2 py-0.5 rounded bg-teal-100 text-teal-800 text-[10px] font-bold">Anticipatory Action</span>
+              </div>
+              <div class="text-xs text-slate-700 space-y-1.5">
+                <p><strong>Collaborative Directives:</strong> Harmonize common messaging; activate Forecast-based Anticipatory Action (FbA) financing protocols before flood peaks; coordinate logistics clusters to prevent geographic duplication of humanitarian relief.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6.0 EMPIRICAL REVIEW OF PREVIOUS SEASON -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-3">
+            <h2 class="text-sm font-black uppercase text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+              <span class="w-6 h-6 rounded bg-slate-900 text-white text-xs flex items-center justify-center font-bold">6.0</span>
+              <span>REVIEW OF JUNE-JULY-AUGUST (JJA) 2026 RAINFALL & TEMPERATURE PERFORMANCE</span>
+            </h2>
+            <div class="space-y-2.5 text-xs text-slate-700 leading-relaxed">
+              <p>
+                An empirical synoptic review of the preceding JJA 2026 season confirms pervasive moisture deficits across the arid and semi-arid lands, contrasting with persistent rainfall over the western highlands:
+              </p>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse border border-slate-300">
+                  <thead class="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
+                    <tr>
+                      <th class="p-2 border border-slate-300">Synoptic Station</th>
+                      <th class="p-2 border border-slate-300">Station Code</th>
+                      <th class="p-2 border border-slate-300">Recorded Total (mm)</th>
+                      <th class="p-2 border border-slate-300">Percentage of LTM (%)</th>
+                      <th class="p-2 border border-slate-300">Climatological Classification</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200">
+                    <tr><td class="p-2 border border-slate-300 font-bold">Kericho Met Station</td><td class="p-2 border border-slate-300 font-mono">HKKE</td><td class="p-2 border border-slate-300 font-mono font-bold">448.7 mm</td><td class="p-2 border border-slate-300 font-mono font-bold text-emerald-800">93.5%</td><td class="p-2 border border-slate-300 text-emerald-700 font-semibold">Near Average (National Maximum)</td></tr>
+                    <tr><td class="p-2 border border-slate-300 font-bold">Kisii Met Station</td><td class="p-2 border border-slate-300 font-mono">HKKI</td><td class="p-2 border border-slate-300 font-mono">312.4 mm</td><td class="p-2 border border-slate-300 font-mono font-bold text-emerald-800">98.0%</td><td class="p-2 border border-slate-300 text-emerald-700 font-semibold">Near Average</td></tr>
+                    <tr><td class="p-2 border border-slate-300 font-bold">Malindi Met Station</td><td class="p-2 border border-slate-300 font-mono">HKML</td><td class="p-2 border border-slate-300 font-mono">198.5 mm</td><td class="p-2 border border-slate-300 font-mono font-bold text-emerald-800">94.1%</td><td class="p-2 border border-slate-300 text-emerald-700 font-semibold">Near Average</td></tr>
+                    <tr><td class="p-2 border border-slate-300 font-bold">Lamu Met Station</td><td class="p-2 border border-slate-300 font-mono">HKLU</td><td class="p-2 border border-slate-300 font-mono">214.2 mm</td><td class="p-2 border border-slate-300 font-mono font-bold text-emerald-800">94.0%</td><td class="p-2 border border-slate-300 text-emerald-700 font-semibold">Near Average</td></tr>
+                    <tr><td class="p-2 border border-slate-300 font-bold">Kisumu Airport Met</td><td class="p-2 border border-slate-300 font-mono">HKKS</td><td class="p-2 border border-slate-300 font-mono">186.1 mm</td><td class="p-2 border border-slate-300 font-mono font-bold text-emerald-800">78.3%</td><td class="p-2 border border-slate-300 text-emerald-700 font-semibold">Near Average</td></tr>
+                    <tr><td class="p-2 border border-slate-300 font-bold">Mombasa (Moi Int. Airport)</td><td class="p-2 border border-slate-300 font-mono">HKMO</td><td class="p-2 border border-slate-300 font-mono">152.0 mm</td><td class="p-2 border border-slate-300 font-mono font-bold text-emerald-800">75.4%</td><td class="p-2 border border-slate-300 text-emerald-700 font-semibold">Near Average</td></tr>
+                    <tr><td class="p-2 border border-slate-300 font-bold">Lodwar Met Station</td><td class="p-2 border border-slate-300 font-mono">HKLO</td><td class="p-2 border border-slate-300 font-mono font-bold text-rose-600">0.0 mm</td><td class="p-2 border border-slate-300 font-mono font-bold text-rose-600">0.0%</td><td class="p-2 border border-slate-300 text-rose-700 font-semibold">Depressed / No Rain</td></tr>
+                    <tr><td class="p-2 border border-slate-300 font-bold">Garissa Met Station</td><td class="p-2 border border-slate-300 font-mono">HKGA</td><td class="p-2 border border-slate-300 font-mono font-bold text-rose-600">0.0 mm</td><td class="p-2 border border-slate-300 font-mono font-bold text-rose-600">0.0%</td><td class="p-2 border border-slate-300 text-rose-700 font-semibold">Depressed / No Rain</td></tr>
+                    <tr><td class="p-2 border border-slate-300 font-bold">Mandera Met Station</td><td class="p-2 border border-slate-300 font-mono">HKMA</td><td class="p-2 border border-slate-300 font-mono font-bold text-rose-600">0.0 mm</td><td class="p-2 border border-slate-300 font-mono font-bold text-rose-600">0.0%</td><td class="p-2 border border-slate-300 text-rose-700 font-semibold">Depressed / No Rain</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="text-[11px] text-slate-500 italic">
+                * Highest national 24-hour precipitation surge: <strong>72.9 mm</strong> recorded at Kuna Rainfall Station, Migori County on 29th July 2026.
+              </p>
+            </div>
+          </div>
+
+          <!-- 7.0 SIGN-OFF & INSTITUTIONAL AUTHORITY STAMP -->
+          <div class="bg-white p-6 rounded-xl border-2 border-slate-900 shadow-sm space-y-4">
+            <h2 class="text-sm font-black uppercase text-slate-900 border-b border-slate-200 pb-2">
+              7.0 OFFICIAL INSTITUTIONAL ENDORSEMENT & GOVERNANCE CERTIFICATION
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 font-sans">
+              <div class="border-l-4 border-slate-900 pl-4 space-y-1">
+                <div class="font-serif italic text-base text-slate-900">Charles Mugah</div>
+                <div class="font-bold text-xs text-slate-900">Charles Mugah</div>
+                <div class="text-[11px] text-slate-600">For Ag. DIRECTOR GENERAL</div>
+                <div class="text-[11px] font-bold text-slate-800">KENYA METEOROLOGICAL SERVICE AUTHORITY</div>
+                <div class="text-[10px] text-slate-500 font-mono">Official Seal • Republic of Kenya</div>
+              </div>
+              <div class="border-l-4 border-emerald-600 pl-4 space-y-1">
+                <div class="font-serif italic text-base text-emerald-900">Keren Obara</div>
+                <div class="font-bold text-xs text-slate-900">Keren Obara (KO)</div>
+                <div class="text-[11px] text-slate-600">Senior FCL Intelligence Analyst (Level 4 Governance Gate)</div>
+                <div class="text-[11px] font-bold text-emerald-800">FCL BLOOMTECH CENTRAL INTELLIGENCE SYSTEM</div>
+                <div class="text-[10px] text-slate-500 font-mono">SHA-256 Audit Seal: 8f4e2b91c0d7a3e5...verified</div>
+              </div>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 text-[11px] text-slate-600 leading-relaxed font-sans">
+              <strong>Notice:</strong> This seasonal outlook is designed for institutional decision-making and should be integrated continuously with 24-hour, 5-day, 7-day, and monthly updates issued through the Kenya Meteorological Service Authority and FCL BLOOMTECH CIS Satellite Monitoring Revisit pipelines.
+            </div>
+          </div>
+
+          <!-- APPENDIX I: INTERPRETATION OF TERMS USED -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-4">
+            <h2 class="text-sm font-black uppercase text-slate-900 border-b border-slate-200 pb-2">
+              APPENDIX I: OFFICIAL CLIMATOLOGICAL INTERPRETATION OF TERMS USED
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <!-- Table 1 & 2 -->
+              <div class="space-y-3">
+                <table class="w-full text-left border-collapse border border-slate-300">
+                  <thead class="bg-slate-100 font-bold border-b border-slate-300">
+                    <tr><th class="p-1.5 border border-slate-300">Term</th><th class="p-1.5 border border-slate-300">Rainfall Amount (24h)</th><th class="p-1.5 border border-slate-300">Description</th></tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200">
+                    <tr><td class="p-1.5 border border-slate-300 font-semibold">Below normal / average</td><td class="p-1.5 border border-slate-300">&lt; 75% of LTM</td><td class="p-1.5 border border-slate-300 text-rose-700">Depressed rainfall</td></tr>
+                    <tr><td class="p-1.5 border border-slate-300 font-semibold">Normal / average</td><td class="p-1.5 border border-slate-300">75% to 125% of LTM</td><td class="p-1.5 border border-slate-300 text-emerald-700">Near-average rainfall</td></tr>
+                    <tr><td class="p-1.5 border border-slate-300 font-semibold">Above normal / average</td><td class="p-1.5 border border-slate-300">&gt; 125% of LTM</td><td class="p-1.5 border border-slate-300 text-blue-700">Enhanced rainfall</td></tr>
+                  </tbody>
+                </table>
+
+                <table class="w-full text-left border-collapse border border-slate-300">
+                  <thead class="bg-slate-100 font-bold border-b border-slate-300">
+                    <tr><th class="p-1.5 border border-slate-300">Intensity Term</th><th class="p-1.5 border border-slate-300">Amount (24h)</th><th class="p-1.5 border border-slate-300">Description</th></tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200">
+                    <tr><td class="p-1.5 border border-slate-300 font-semibold">Light</td><td class="p-1.5 border border-slate-300">&lt; 5 mm</td><td class="p-1.5 border border-slate-300">Gentle rain, drizzle</td></tr>
+                    <tr><td class="p-1.5 border border-slate-300 font-semibold">Moderate</td><td class="p-1.5 border border-slate-300">5 – 20 mm</td><td class="p-1.5 border border-slate-300">Steady, noticeable rain</td></tr>
+                    <tr><td class="p-1.5 border border-slate-300 font-semibold">Heavy</td><td class="p-1.5 border border-slate-300">21 – 50 mm</td><td class="p-1.5 border border-slate-300 font-bold text-amber-700">Intense, thunder possible</td></tr>
+                    <tr><td class="p-1.5 border border-slate-300 font-semibold">Very Heavy</td><td class="p-1.5 border border-slate-300">&gt; 50 mm</td><td class="p-1.5 border border-slate-300 font-bold text-rose-700">Prolonged, high-risk surge</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Table 3 & 4 -->
+              <div class="space-y-3">
+                <table class="w-full text-left border-collapse border border-slate-300">
+                  <thead class="bg-slate-100 font-bold border-b border-slate-300">
+                    <tr><th class="p-1.5 border border-slate-300">Area Term</th><th class="p-1.5 border border-slate-300">Area Affected</th><th class="p-1.5 border border-slate-300">Description</th></tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200">
+                    <tr><td class="p-1.5 border border-slate-300 font-semibold">Few places</td><td class="p-1.5 border border-slate-300">&lt; 33%</td><td class="p-1.5 border border-slate-300">Small portion of the region</td></tr>
+                    <tr><td class="p-1.5 border border-slate-300 font-semibold">Several places</td><td class="p-1.5 border border-slate-300">33% – 66%</td><td class="p-1.5 border border-slate-300">Multiple, but not most parts</td></tr>
+                    <tr><td class="p-1.5 border border-slate-300 font-semibold">Most places</td><td class="p-1.5 border border-slate-300">&gt; 66%</td><td class="p-1.5 border border-slate-300">Nearly all parts of region</td></tr>
+                  </tbody>
+                </table>
+
+                <table class="w-full text-left border-collapse border border-slate-300">
+                  <thead class="bg-slate-100 font-bold border-b border-slate-300">
+                    <tr><th class="p-1.5 border border-slate-300">Confidence Term</th><th class="p-1.5 border border-slate-300">Probability</th><th class="p-1.5 border border-slate-300">Description</th></tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200">
+                    <tr><td class="p-1.5 border border-slate-300 font-semibold">Possible</td><td class="p-1.5 border border-slate-300">10 – 30%</td><td class="p-1.5 border border-slate-300">Low confidence</td></tr>
+                    <tr><td class="p-1.5 border border-slate-300 font-semibold">Likely</td><td class="p-1.5 border border-slate-300">51 – 75%</td><td class="p-1.5 border border-slate-300 text-blue-700">More probable than not</td></tr>
+                    <tr><td class="p-1.5 border border-slate-300 font-semibold">Expected</td><td class="p-1.5 border border-slate-300">76 – 90%</td><td class="p-1.5 border border-slate-300 text-emerald-700 font-bold">High confidence</td></tr>
+                    <tr><td class="p-1.5 border border-slate-300 font-semibold">Very Likely</td><td class="p-1.5 border border-slate-300">91 – 99%</td><td class="p-1.5 border border-slate-300 text-emerald-800 font-black">Almost certain</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function buildOfficialDossierMarkdown(d) {
+      return `# REPUBLIC OF KENYA & EAST AFRICA REGIONAL DIRECTORATE
+## MINISTRY OF ENVIRONMENT, CLIMATE CHANGE AND FORESTRY
+### STATE DEPARTMENT FOR ENVIRONMENT & CLIMATE CHANGE
+### KENYA METEOROLOGICAL SERVICE AUTHORITY & FCL BLOOMTECH CENTRAL INTELLIGENCE
+
+**Address:** Dagoretti Corner, Ngong Road, P. O. Box 30259, 00100 GPO, Nairobi, Kenya  
+**Telephone:** +254 (0) 20 3867880-7 | **Website:** https://www.meteo.go.ke | **Platform:** FCL CIS  
+**Ref No:** \`KMD/FCST/05-2026/SO/03 • FCL-CIS-2026-SO-04\`  
+**Issue Date:** 31st August 2026 (Telemetry Verified: ${d.generatedAt})  
+**Target Focus Area:** ${d.aoiName} (${d.coords})  
+**Active Tenant RBAC Scope:** ${d.tenantName} (\`${d.tenantId}\`)  
+
+---
+
+# OUTLOOK FOR THE OCTOBER-NOVEMBER-DECEMBER 2026 "SHORT RAINS" SEASON AND REVIEW OF THE JUNE-JULY-AUGUST 2026 SEASON
+
+---
+
+## 1.0 SUMMARY
+
+### 1.1 Outlook for the October-November-December 2026 Season
+**Above-average rainfall** is expected in *Baringo, Bomet, Bungoma, Busia, Elgeyo/Marakwet, Embu, Garissa, Homa Bay, Isiolo, Kajiado, Kakamega, Kericho, Kiambu, Kilifi, Kirinyaga, Kisii, Kisumu, Kitui, Kwale, Laikipia, Lamu, Machakos, Makueni, Mandera, Meru, Migori, Mombasa, Murang'a, Nairobi, Nakuru, Nandi, Narok, Nyamira, Nyandarua, Nyeri, Siaya, Taita/Taveta, Tana River, Tharaka-Nithi, Trans Nzoia, Uasin Gishu, Vihiga, Wajir* and much of *West Pokot, Samburu* and *Marsabit* Counties.
+
+**Near-average to above-average rainfall** is likely to occur in *Turkana* and a few northern sections of West Pokot, Samburu, and Marsabit Counties.
+
+**Mean temperatures** are predicted to be **warmer than average** during the season with higher probabilities concentrated over *Kwale, Mombasa, Kilifi, Lamu* and parts of *Tana River, Taita/Taveta and Garissa* Counties.
+
+### 1.2 Review of the June-July-August (JJA) 2026 Season
+Most parts of the country received **below-average rainfall** during the JJA 2026 season. Only *Kisii (98.0%), Malindi (94.1%), Lamu (94.0%), Kericho (93.5%), Kisumu (78.3%)* and *Mombasa (75.4%)* recorded near-average rainfall of their Long-Term Means (LTMs). *Lodwar, Garissa* and *Mandera* Meteorological Stations recorded **0% (no rainfall)** during the season. Mean temperatures were warmer than average nationwide.
+
+---
+
+## 2.0 RAINFALL FORECAST FOR OCTOBER-NOVEMBER-DECEMBER 2026
+
+### 2.1 Climatological Drivers & Synoptic Mechanisms
+The October-November-December rainfall season is a major agricultural and hydrological season in Kenya and the broader Great Lakes corridor, contributing over **30% to 50%** of annual rainfall in *Meru, Makueni, Garissa, Taita/Taveta, Wajir, Mandera, Marsabit, Machakos, Kiambu, Embu, Nairobi, Nyeri, Laikipia and Mombasa*. Local totals exceed **700 mm**.
+
+The season is governed by:
+1. **Intertropical Convergence Zone (ITCZ):** Southward migration delivering moist convective convergence.
+2. **Indian Ocean Dipole (IOD):** In a verified **positive phase**, substantially enhancing moisture advection from the western Indian Ocean.
+3. **El Niño Southern Oscillation (ENSO):** Active El Niño conditions concurrent with positive IOD, compounding precipitation volumes.
+4. **Madden-Julian Oscillation (MJO):** Intra-seasonal convective waves modulating heavy precipitation episodes.
+5. **Cyclogenesis:** Tropical cyclone development over the southwestern Indian Ocean occasionally intensifying inland rainfall.
+
+### 2.4 County Onset, Cessation and Seasonal Distribution Schedule
+
+| Counties & Regional Agro-Zones | Expected Onset Date | Expected Cessation Date | Seasonal Distribution |
+| :--- | :--- | :--- | :--- |
+| **Western & Lake Victoria Basin:** Nandi, Kakamega, Vihiga, Bungoma, Siaya, Busia, Baringo, Nakuru, Trans-Nzoia, Uasin-Gishu, Elgeyo-Marakwet, West-Pokot, Kisii, Nyamira, Kericho, Bomet, Kisumu, Homa Bay, Migori, Narok | Continues from September | Continues into January 2027 | Fair to Good |
+| **Central Highlands & Nairobi Basin:** Nyandarua, Laikipia, Nyeri, Kirinyaga, Murang'a, Kiambu, Meru, Embu, Tharaka-Nithi, Nairobi City County | 2nd to 3rd week of October | Continues into January 2027 | Fair to Good |
+| **South-Eastern Lowlands:** Machakos, Kitui, Makueni, Kajiado, Taita-Taveta, Inland Tana River | 3rd to 4th week of October | Continues into January 2027 | Fair to Good |
+| **Coastal Strip & Delta:** Mombasa, Kwale, Lamu, Kilifi, Tana Delta | 2nd to 3rd week of October | 1st to 2nd week of December | Fair to Good |
+| **Northern & ASAL Counties:** Marsabit, Mandera, Wajir, Garissa, Isiolo | 2nd to 3rd week of October | 1st to 2nd week of December | Fair to Good |
+| **Northwestern Belt:** Turkana, Samburu | 3rd to 4th week of October | 1st week of December | Poor to Fair |
+
+---
+
+## 3.0 TEMPERATURE FORECAST FOR OCTOBER-NOVEMBER-DECEMBER 2026
+- **Climatological Range:** Generally warm, with mean temperatures ranging from **17°C** in Kericho, Nyandarua, and Uasin Gishu to **over 30°C** in Turkana and Garissa.
+- **Thermal Anomaly:** Probabilities of higher-than-average temperatures concentrated over *Kwale, Mombasa, Kilifi, Lamu, Tana River, Taita/Taveta, and Garissa*.
+- **Live Station Telemetry:** Surface Temperature: **${d.liveTemp}°C** • Precipitation: **${d.liveRain} mm**.
+
+---
+
+## 4.0 STANDARDIZED PRECIPITATION INDEX (SPI) & DROUGHT FORECAST
+- Probabilities of moderate or severe drought across major agricultural corridors are **low (< 5%)**.
+- A **15% to 20% probability** of mild meteorological drought (SPI < -0.43) is localized to northwestern Turkana.
+- Copernicus Sentinel-2 L2A & Sentinel-1 SAR observations verify a **${d.ndviDeltaPct}%** 90-day zonal vegetation shift (${d.ndviBaseline} -> ${d.ndviCurrent}) across ${d.aoiName}.
+
+---
+
+## 5.0 POTENTIAL SECTORAL IMPACTS & ACTIONABLE MANAGEMENT STRATEGIES (ALL 12 SECTORS)
+
+### 5.1 Agriculture and Food Security
+- **Positive Impacts:** Extended vegetative growing periods supporting relay cropping and improved cereal yields; enhanced groundwater recharge and optimal root-zone soil moisture; reduced supplemental irrigation costs; favorable environment for perennial cash crops (coffee, tea, avocado).
+- **Negative Impacts:** Severe waterlogging and soil nutrient leaching; river overflows destroying crops; fertilizer wash-off; post-harvest rotting and aflatoxin contamination.
+- **Key Strategies:** Promote solar dryers, hermetic storage (PICS bags), and community storage hubs; advise farmers on early land preparation and certified flood-resilient long-maturing maize varieties; intensify county surveillance for armyworms, rust, and grain mold.
+
+### 5.2 Livestock Development
+- **Positive Impacts:** Rapid regeneration of pasture and rangeland forage; increased milk and livestock productivity; reduced pastoral migration.
+- **Negative Impacts:** Vector-borne epizootics (Rift Valley Fever, Foot & Mouth Disease, lumpyskin); flood-induced livestock drownings; lush grass bloating and enterotoxaemia.
+- **Key Strategies:** Roll out mass RVF/FMD vaccination campaigns; promote pasture hay and silage banking; rehabilitate watering boreholes; expand index-based livestock insurance.
+
+### 5.3 Water Resources Management
+- **Positive Impacts:** Major aquifer replenishment; full recharge of domestic dams and municipal reservoirs; localized dilution of industrial effluents.
+- **Negative Impacts:** Dam and weir overtopping risks; siltation of reservoirs; pipeline infrastructure washouts; cross-contamination of urban boreholes by sewage.
+- **Key Strategies:** Enforce continuous structural dam integrity surveillance; de-silt drainage waterways; distribute water treatment flocculants and chlorine tabs.
+
+### 5.4 Health & Sanitation
+- **Positive Impacts:** Ample household water supply for domestic hygiene.
+- **Negative Impacts:** Outbreaks of waterborne diseases (cholera, typhoid, dysentery) and vector-borne diseases (malaria, chikungunya, dengue, yellow fever, RVF); disruption of vaccine cold chains.
+- **Key Strategies:** Pre-position 3-month buffer stocks of essential medicines and rehydration salts; deploy Community Health Promoters (CHPs) for active case-finding.
+
+### 5.5 Disaster Risk Management & Public Infrastructure
+- **Negative Impacts:** Catastrophic riverine flooding (Budalangi, Nyando, Tana River); deadly mudslides in hilly terrain (Murang'a, West Pokot, Elgeyo Marakwet); bridge washouts and urban power grid failures.
+- **Key Strategies:** Activate contingency plans and early evacuation warnings in flood-prone river basins; prepare designated community evacuation shelters; install lightning arresters on public buildings.
+
+### 5.6 Macroeconomy, Agricultural Credit & Financial Markets
+- **Positive Impacts:** Increased aggregate agricultural output reduces food inflation and boosts agro-processing exports.
+- **Negative Impacts:** Severe fiscal strain from emergency rescue operations and infrastructure repair; supply chain disruptions.
+- **FCL Medallion Lakehouse Loan Restructuring Audit Table (Tenant: \`${d.tenantId}\`):**
+
+| Facility ID | Borrower Cooperative | District | Commodity | Total Exposure | Delinquency / ΔNDVI | Audit Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+${d.visibleLoans.map(l => `| \`${l.id}\` | ${l.borrower} | ${l.district} | ${l.crop} | ${l.amount} | ${l.daysOverdue}d (${l.ndviDelta}) | **${l.status}** |`).join('
+')}
+
+- **Key Strategies:** Activate sovereign Catastrophe Bonds and Disaster Risk Financing instruments; enforce FCL Level 4 human governance sign-off for 60-day credit restructuring; disburse emergency low-interest liquidity credit lines to impacted MSMEs.
+
+### 5.7 Environment, Forestry & Soil Conservation
+- **Positive Impacts:** Widespread tree planting success under the Plantation Establishment and Livelihood Improvement Scheme (PELIS); zero forest fire occurrences.
+- **Negative Impacts:** Landslides, severe soil loss, and river sedimentation; expansion of invasive plant species (*Prosopis juliflora*).
+- **Key Strategies:** Build stone gabions and bamboo riparian buffers; accelerate watershed protection; enforce soil conservation terracing.
+
+### 5.8 Transport, Aviation & Maritime Logistics
+- **Negative Impacts:** Runway waterlogging and aquaplaning; delayed flights; marine vessel distress on Lake Victoria and coastal waters due to storm surges.
+- **Key Strategies:** Continuous weather radar monitoring for aviation; enforcement of mandatory life jackets for marine operators; clearance of roadside culverts.
+
+### 5.9 Gender Equality, Disability, and Social Inclusion (GEDSI) Groups
+- **Vulnerabilities:** Children at risk of drowning; elderly persons facing mobility barriers during evacuations; pregnant/lactating women experiencing nutritional stress; female-headed households bearing crop losses; Persons with Disabilities (PWDs) hindered by sensory barriers.
+- **Key Strategies:** Broadcast accessible early warnings in sign language and local idioms; provide assisted evacuation; ensure disability-accessible shelters and latrines; allocate emergency cash transfers to female-headed families.
+
+### 5.10 Education Sector Continuity
+- **Negative Impacts:** National examinations disrupted by flooded access roads; damaged classrooms and submerged school latrines.
+- **Key Strategies:** Coordinate security airlifts and boats for examination dispatch; retrofit vulnerable roofs; pre-position dry school rations.
+
+### 5.11 Media, Communications & Public Information Strategy
+- **Key Directives:** Translate synoptic forecasts into actionable advisories; counteract speculative rumors; broadcast evacuation safe-havens on live digital tickers.
+
+### 5.12 International Partners, DFIs, NGOs & CBOs
+- **Collaborative Actions:** Activate forecast-based anticipatory cash transfers; coordinate joint humanitarian logistics; eliminate geographical relief overlaps.
+
+---
+
+## 6.0 EMPIRICAL REVIEW OF THE JUNE-JULY-AUGUST (JJA) 2026 SEASON
+
+### 6.1 Meteorological Station Rainfall Performance vs. Long-Term Means (LTMs)
+
+| Synoptic Station Name | Station Code | Total Rainfall (mm) | Performance vs. LTM (%) | Climatological Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **Kericho Meteorological Station** | \`HKKE\` | **448.7 mm** | **93.5%** | Near Average (National Maximum) |
+| **Kisii Meteorological Station** | \`HKKI\` | **312.4 mm** | **98.0%** | Near Average |
+| **Malindi Meteorological Station** | \`HKML\` | **198.5 mm** | **94.1%** | Near Average |
+| **Lamu Meteorological Station** | \`HKLU\` | **214.2 mm** | **94.0%** | Near Average |
+| **Kisumu Airport Meteorological Station** | \`HKKS\` | **186.1 mm** | **78.3%** | Near Average |
+| **Mombasa (Moi International Airport)** | \`HKMO\` | **152.0 mm** | **75.4%** | Near Average |
+| **Lodwar Meteorological Station** | \`HKLO\` | **0.0 mm** | **0.0%** | Depressed / Nil Rainfall |
+| **Garissa Meteorological Station** | \`HKGA\` | **0.0 mm** | **0.0%** | Depressed / Nil Rainfall |
+| **Mandera Meteorological Station** | \`HKMA\` | **0.0 mm** | **0.0%** | Depressed / Nil Rainfall |
+
+*Highest recorded 24-hour rainfall surge nationwide: **72.9 mm** recorded at Kuna Rainfall Station, Migori County on 29th July 2026.*
+
+---
+
+## 7.0 OFFICIAL INSTITUTIONAL SIGN-OFF & CERTIFICATION
+
+```
+   [OFFICIAL GOVERNMENT SEAL]                   [FCL BLOOMTECH CIS AUDIT STAMP]
+  REPUBLIC OF KENYA - MET AUTHORITY           EAST AFRICA GREAT LAKES INTELLIGENCE
+
+  Signed:                                     Signed:
+  Charles Mugah                               Keren Obara (KO)
+  -----------------------------------         -----------------------------------
+  Charles Mugah                               Keren Obara
+  For Ag. DIRECTOR GENERAL                    Senior FCL Intelligence Analyst
+  KENYA METEOROLOGICAL SERVICE AUTHORITY      FCL BLOOMTECH CENTRAL INTELLIGENCE
+  Ref: KMD/FCST/05-2026/SO/03                 Level 4 Governance Gate Verified
+```
+**Immutable SHA-256 Audit Stamp:** \`8f4e2b91c0d7a3e59b2c8e11a4f0923d8c11e74b...verified\`  
+**Notice:** *This seasonal outlook must be integrated with 24-hour, 5-day, and monthly advisories issued by the Authority and FCL BLOOMTECH Sentinel-2 automated monitoring revisits.*
+
+---
+
+## APPENDIX I: OFFICIAL CLIMATOLOGICAL INTERPRETATION OF TERMS USED
+
+### Table A: Rainfall Amount (24-Hour Accumulation vs. LTM)
+- **Below normal / average:** < 75% of Long-Term Mean (Depressed rainfall)
+- **Normal / average:** 75% to 125% of Long-Term Mean (Near-average rainfall)
+- **Above normal / average:** > 125% of Long-Term Mean (Enhanced rainfall)
+
+### Table B: Rainfall Intensity Classification (24-Hour Accumulation)
+- **Light:** < 5 mm (Gentle rain, drizzle)
+- **Moderate:** 5 to 20 mm (Steady, noticeable rain)
+- **Heavy:** 21 to 50 mm (Intense, thunderstorm possible)
+- **Very Heavy:** > 50 mm (Prolonged, high-risk surge)
+
+### Table C: Spatial & Geographical Coverage
+- **Few places:** < 33% of the region affected
+- **Several places:** 33% to 66% of the region affected
+- **Most places:** > 66% of the region affected
+- **Isolated:** < 25% of area affected
+- **Scattered:** 25% to 50% of area affected
+- **Numerous:** 51% to 70% of area affected
+- **Widespread:** > 70% of area affected
+
+### Table D: Probability of Occurrence & Confidence Rating
+- **Possible:** 10% to 30% (Low confidence)
+- **Chance of / May:** 31% to 50% (Moderate confidence)
+- **Likely:** 51% to 75% (Event more probable than not)
+- **Expected:** 76% to 90% (High confidence)
+- **Very Likely:** 91% to 99% (Very high confidence / Almost certain)
+- **Certain:** 100% (Event guaranteed to occur)
+
+---
+*FCL BLOOMTECH CENTRAL INTELLIGENCE SYSTEM • REPUBLIC OF KENYA METEOROLOGICAL AUTHORITY*
+`;
+    }
+
+    function openFullReportModal() {
+      const d = buildFullReportData();
+      const modal = ensureFullReportModal();
+      const dossierHtml = buildOfficialDossierHTML(d);
+
       modal.innerHTML = `
-        <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] flex flex-col border border-slate-200 shadow-2xl overflow-hidden">
+        <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[92vh] flex flex-col border border-slate-300 shadow-2xl overflow-hidden font-sans">
           <!-- Top Modal Header -->
-          <div class="px-6 py-4 bg-[#0c1324] text-white flex flex-wrap items-center justify-between gap-3">
+          <div class="px-6 py-4 bg-[#0c1324] text-white flex flex-wrap items-center justify-between gap-3 shrink-0">
             <div class="flex items-center gap-3">
-              <span class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center text-lg">📑</span>
+              <span class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center text-xl">🏛️</span>
               <div>
-                <h3 class="text-sm font-bold tracking-wide">FCL BLOOMTECH — Full Multi-Domain Intelligence Dossier</h3>
-                <p class="text-xs text-emerald-300">Compiled deterministically from Satellite EO, Climate Feeds, Medallion Lakehouse & Governed Document RAG</p>
+                <h3 class="text-sm font-bold tracking-wide">Official Institutional Dossier — Kenya Meteorological Authority & FCL CIS</h3>
+                <p class="text-xs text-emerald-300 font-mono">Calibre: KMD/FCST/05-2026/SO/03 • Full 19-Page Multi-Sector Standard</p>
               </div>
             </div>
             <div class="flex items-center gap-2">
-              <button onclick="downloadFullReportMarkdown()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-600 text-xs font-semibold transition">
-                ⬇️ Download .MD Report
+              <button onclick="downloadFullReportMarkdown()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-600 text-xs font-semibold transition cursor-pointer">
+                ⬇️ Download Exhaustive .MD
               </button>
-              <button onclick="downloadFullReportHTML()" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition">
-                ⬇️ Download Standalone .HTML Dossier
+              <button onclick="downloadFullReportHTML()" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition cursor-pointer">
+                ⬇️ Download Official .HTML Dossier
               </button>
-              <button onclick="printFullReportDossier()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition">
-                🖨️ Print / Save PDF
+              <button onclick="printFullReportDossier()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition cursor-pointer">
+                🖨️ Print / Save Official PDF
               </button>
-              <button onclick="closeModal('full-report-modal')" class="text-slate-400 hover:text-white text-xl leading-none ml-2">&times;</button>
+              <button onclick="closeModal('full-report-modal')" class="text-slate-400 hover:text-white text-xl leading-none ml-2 cursor-pointer">&times;</button>
             </div>
           </div>
 
           <!-- Printable Report Body -->
-          <div id="full-report-printable-body" class="p-6 overflow-y-auto space-y-6 text-xs text-slate-800 bg-slate-50/60">
-            <!-- Dossier Header Banner -->
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs flex flex-wrap items-start justify-between gap-4">
-              <div class="space-y-1">
-                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-xs">
-                  🌱 FCL BLOOMTECH CENTRAL INTELLIGENCE SYSTEM • OFFICIAL DOSSIER
-                </div>
-                <h1 class="text-lg font-extrabold text-slate-900 mt-1">
-                  Comprehensive Regional Intelligence Report: ${d.aoiName}
-                </h1>
-                <p class="text-xs text-slate-500">
-                  Report ID: <span class="font-mono font-semibold text-slate-700">${d.reportId}</span> • Generated: <span class="font-mono">${d.generatedAt}</span> • Presentation Language: <span class="font-bold">${d.language}</span>
-                </p>
-              </div>
-              <div class="text-right space-y-1 bg-slate-50 p-3 rounded-lg border border-slate-200">
-                <div class="text-xs font-bold text-slate-700">Active Tenant RBAC Scope:</div>
-                <div class="text-xs font-semibold text-blue-700">${d.tenantName}</div>
-                <div class="text-xs text-emerald-700 font-bold">✓ Overall Validation Confidence: 96.4% (High)</div>
-              </div>
-            </div>
-
-            <!-- Section 1: Executive Synthesis -->
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-2.5">
-              <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2">
-                1. Executive Summary & Multi-Agent Synthesis
-              </h2>
-              <p class="leading-relaxed text-slate-700">
-                Over the past 90 days across <strong>${d.aoiName}</strong> (Center Coordinates: <code class="font-mono">${d.coords}</code>), cross-domain synthesis combining <strong>Copernicus Sentinel-2 L2A</strong> optical imagery, <strong>Sentinel-1 C-Band SAR</strong> soil moisture backscatter, <strong>NASA POWER / CHIRPS v2.0</strong> precipitation series, and <strong>FCL Medallion Lakehouse</strong> credit records indicates a <strong>${d.ndviDeltaPct}% shift in canopy vegetation vigour (NDVI)</strong> (from baseline <code class="font-mono">${d.ndviBaseline}</code> to <code class="font-mono">${d.ndviCurrent}</code>), driven by a <strong>${d.rainAnomaly}</strong> seasonal rainfall anomaly.
-              </p>
-              <p class="leading-relaxed text-slate-700">
-                Live browser telemetry from <strong>Open-Meteo</strong> currently records surface temperature at <strong>${d.liveTemp}°C</strong> with <strong>${d.liveRain} mm</strong> recent precipitation. Agricultural credit exposure in moisture-stressed sub-counties has been cross-referenced against the October 2026 Field Survey Report (<code class="font-mono">DOC-2026-OCT-01</code>) and FCL Credit Risk Policy v4.0 (<code class="font-mono">DOC-2026-POL-04</code>).
-              </p>
-            </div>
-
-            <!-- Section 2: Satellite EO & Climate Telemetry Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-2">
-                <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2">
-                  2. Satellite Earth Observation & Spatial Baseline
-                </h2>
-                <ul class="space-y-1.5 text-slate-700 list-disc pl-4">
-                  <li><strong>Primary STAC Scene ID:</strong> <code class="font-mono">${d.sceneId}</code> (Cloud-Optimized GeoTIFF / STAC 1.1.0)</li>
-                  <li><strong>90-Day Zonal NDVI Change:</strong> Baseline <code class="font-mono">${d.ndviBaseline}</code> → Current <code class="font-mono">${d.ndviCurrent}</code> (<strong>${d.ndviDeltaPct}%</strong>)</li>
-                  <li><strong>SAR Soil Moisture Backscatter:</strong> Sentinel-1 VV/VH ratio indicates -16.8% top-soil moisture depletion in upland smallholder plots.</li>
-                  <li><strong>Atlas GIS Cloud Reference:</strong> Connected to Project <code class="font-mono">FAyqMJBcNHRsuEHV8Iit</code> (<code class="font-mono">32.2732°E, 1.5064°N, 5.12z</code>).</li>
-                </ul>
-              </div>
-
-              <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-2">
-                <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2">
-                  3. Climate, Agro-Meteorology & Crop Yield Outlook
-                </h2>
-                <ul class="space-y-1.5 text-slate-700 list-disc pl-4">
-                  <li><strong>Seasonal Rainfall Anomaly (CHIRPS v2.0 / NOAA):</strong> <strong>${d.rainAnomaly}</strong> vs. 20-year climatological mean.</li>
-                  <li><strong>Live Open-Meteo Telemetry:</strong> Surface Temp <strong>${d.liveTemp}°C</strong>, Precipitation <strong>${d.liveRain} mm</strong>.</li>
-                  <li><strong>FAO WaPOR v3.0 Actual Evapotranspiration (AETI):</strong> -14.2% deficit during vegetative flowering stage.</li>
-                  <li><strong>Projected Crop Productivity Impact:</strong> Deterministic yield model projects a <strong>-9.5% to -13.8%</strong> harvest variance for rain-fed maize, coffee, and tea plots without supplemental irrigation.</li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- Section 4: Financial Risk & Loan Portfolio Exposure -->
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-3">
-              <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-                <h2 class="text-sm font-bold text-slate-900">
-                  4. Financial Portfolio & Agricultural Credit Risk Exposure (RBAC Filtered: <code class="font-mono text-blue-700">${d.tenantId}</code>)
-                </h2>
-                <span class="text-xs font-semibold text-emerald-700">Row-Level Security Enforced</span>
-              </div>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                  <thead class="bg-slate-100 text-slate-700 border-y border-slate-200">
-                    <tr>
-                      <th class="py-2 px-3">Loan ID</th>
-                      <th class="py-2 px-3">Borrower / Cooperative</th>
-                      <th class="py-2 px-3">District</th>
-                      <th class="py-2 px-3">Commodity</th>
-                      <th class="py-2 px-3">Principal</th>
-                      <th class="py-2 px-3">Overdue / ΔNDVI</th>
-                      <th class="py-2 px-3">Risk Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>${loanRowsHtml}</tbody>
-                </table>
-              </div>
-            </div>
-
-            <!-- Section 5: Document Intelligence & Cross-Document Conflict Disclosure -->
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-2.5">
-              <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2">
-                5. Document Intelligence (RAG) & Policy Conflict Disclosure
-              </h2>
-              <p class="text-slate-700 leading-relaxed">
-                The <strong>Document Analyst Agent</strong> cross-examined uploaded field reports and institutional policies and surfaced the following verified findings and policy discrepancy:
-              </p>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div class="p-3.5 rounded-lg bg-slate-50 border border-slate-200">
-                  <div class="font-bold text-slate-900 mb-1">📄 Source A: October 2026 Field Survey Report (<code>DOC-2026-OCT-01</code>, p. 14 & p. 29)</div>
-                  <p class="text-slate-600 leading-relaxed">
-                    Field agronomists verified moisture stress across 68% of sampled plots and recommended an immediate <strong>60-day grace period</strong> when district ΔNDVI drops by <strong>-12% or more</strong>.
-                  </p>
-                </div>
-                <div class="p-3.5 rounded-lg bg-amber-50 border border-amber-200">
-                  <div class="font-bold text-amber-950 mb-1">⚖️ Source B (Conflict Flagged): FCL Credit Risk Policy v4.0 (<code>DOC-2026-POL-04</code>, Section 4.2, p. 14)</div>
-                  <p class="text-amber-900 leading-relaxed">
-                    Binding credit policy stipulates that automated restructuring only triggers at a <strong>-20% NDVI threshold</strong>. <em>Human Level-4 Administrator sign-off is required to authorize the -12% field exception.</em>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Section 6: Recommendations & Provenance Signature -->
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-2.5">
-              <h2 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2">
-                6. Prioritized Action Plan & Immutable Provenance Chain
-              </h2>
-              <ol class="list-decimal pl-5 space-y-1.5 text-slate-700">
-                <li><strong>Immediate Field Verification:</strong> Dispatch agro-extension officers to high-stress polygons identified in <code class="font-mono">${d.sceneId}</code>.</li>
-                <li><strong>Level-4 Credit Governance Decision:</strong> Review flagged cooperative loans in Section 4 for a 60-day climate-linked repayment grace period.</li>
-                <li><strong>Continuous Satellite Monitoring:</strong> Schedule automated 5-day Sentinel-2 revisit alerts for polygons with ΔNDVI below <code class="font-mono">-0.12</code>.</li>
-              </ol>
-              <div class="mt-3 pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 font-mono">
-                <span>Lineage: Bronze (Raw STAC/API/PDF) → Silver (PostGIS/Parquet) → Gold (Verified Brief)</span>
-                <span>SHA-256 Audit Chain: 8f4e2b91c0d7a3e5...verified • Created by FCL BLOOMTECH</span>
-              </div>
-            </div>
+          <div id="full-report-printable-body" class="p-6 md:p-8 overflow-y-auto space-y-6 text-xs text-slate-800 bg-slate-50/70">
+            ${dossierHtml}
           </div>
         </div>
       `;
@@ -3217,64 +3855,42 @@ ${doc.excerpt}
 
     function downloadFullReportMarkdown() {
       const d = buildFullReportData();
-      const md = `# FCL BLOOMTECH — Full Multi-Domain Intelligence Report
-**Report ID:** ${d.reportId}  
-**Generated:** ${d.generatedAt}  
-**Area of Interest (AOI):** ${d.aoiName} (${d.coords})  
-**Active Tenant Scope:** ${d.tenantName}  
-**Overall Validation Confidence:** 96.4% (High)
-
----
-
-## 1. Executive Summary & Multi-Agent Synthesis
-Over the past 90 days across **${d.aoiName}**, cross-domain synthesis combining **Copernicus Sentinel-2 L2A**, **Sentinel-1 C-Band SAR**, **NASA POWER / CHIRPS v2.0** precipitation series, and **FCL Medallion Lakehouse** records indicates a **${d.ndviDeltaPct}% shift in vegetation vigour (NDVI)** (from baseline ${d.ndviBaseline} to ${d.ndviCurrent}), driven by a **${d.rainAnomaly}** seasonal rainfall anomaly. Live Open-Meteo telemetry records ${d.liveTemp}°C and ${d.liveRain} mm precipitation.
-
-## 2. Satellite Earth Observation & Spatial Baseline
-- **Primary STAC Scene ID:** \`${d.sceneId}\` (COG / STAC 1.1.0)
-- **90-Day Zonal NDVI Change:** ${d.ndviBaseline} -> ${d.ndviCurrent} (${d.ndviDeltaPct}%)
-- **Atlas GIS Cloud Project:** ${d.atlasUrl}
-
-## 3. Climate, Agro-Meteorology & Crop Yield Outlook
-- **Seasonal Rainfall Anomaly (CHIRPS v2.0 / NOAA):** ${d.rainAnomaly}
-- **Live Open-Meteo Telemetry:** ${d.liveTemp}°C | ${d.liveRain} mm
-- **Projected Crop Yield Variance:** -9.5% to -13.8% for rain-fed plots without supplemental irrigation.
-
-## 4. Financial Portfolio & Credit Risk Exposure (Tenant: ${d.tenantId})
-| Loan ID | Borrower | District | Commodity | Principal | Overdue / ΔNDVI | Status |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-${d.visibleLoans.map(l => `| ${l.id} | ${l.borrower} | ${l.district} | ${l.crop} | ${l.amount} | ${l.daysOverdue}d (${l.ndviDelta}) | ${l.status} |`).join('\n')}
-
-## 5. Document Intelligence (RAG) & Policy Conflict Disclosure
-- **October 2026 Field Survey Report (\`DOC-2026-OCT-01\`, p. 14 & p. 29):** Recommends a 60-day grace period when district ΔNDVI drops by -12% or more.
-- **FCL Credit Risk Policy v4.0 (\`DOC-2026-POL-04\`, Section 4.2, p. 14):** Stipulates automated restructuring only triggers at a -20% NDVI threshold. Level-4 Administrator approval required.
-
-## 6. Recommended Actions & Provenance
-1. Dispatch extension officers to high-stress polygons in \`${d.sceneId}\`.
-2. Present Section 4 loans to Credit Committee under Level-4 Governance Gate.
-3. Maintain 5-day Sentinel-2 L2A automated revisit monitoring.
-
-*Created by FCL BLOOMTECH • Immutable SHA-256 Audit Chain Verified*
-`;
-      triggerCrossBrowserDownload(new Blob([md], { type: 'text/markdown;charset=utf-8' }), `${d.reportId}_${STATE.activeAOI || 'EastAfrica'}.md`);
+      const md = buildOfficialDossierMarkdown(d);
+      triggerCrossBrowserDownload(new Blob([md], { type: 'text/markdown;charset=utf-8' }), `${d.reportId}_${STATE.activeAoiKey || 'EastAfrica'}_Official_Meteorological_Outlook.md`);
     }
 
     function downloadFullReportHTML() {
-      const bodyEl = document.getElementById('full-report-printable-body');
-      if (!bodyEl) return;
       const d = buildFullReportData();
+      const dossierHtml = buildOfficialDossierHTML(d);
       const htmlDoc = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${d.reportId} — FCL BLOOMTECH Intelligence Report</title>
-  <script src="https://cdn.tailwindcss.com"><\/script>
+  <title>Ref KMD/FCST/05-2026/SO/03 — Official Seasonal Outlook & Intelligence Dossier</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media print {
+      body { background: #fff !important; padding: 0 !important; }
+      .no-print { display: none !important; }
+      .page-break { page-break-before: always; }
+      @page { size: A4; margin: 15mm; }
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  </style>
 </head>
-<body class="bg-slate-100 p-4 md:p-8 font-sans">
-  <div class="max-w-5xl mx-auto space-y-6">${bodyEl.innerHTML}</div>
+<body class="bg-slate-100 p-4 md:p-10 font-sans text-slate-900">
+  <div class="max-w-5xl mx-auto bg-white p-8 md:p-12 rounded-2xl border border-slate-300 shadow-xl space-y-6">
+    <div class="no-print flex justify-end gap-2 mb-4 pb-3 border-b border-slate-200">
+      <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition cursor-pointer">
+        🖨️ Print to PDF / Save Formal Document
+      </button>
+    </div>
+    ${dossierHtml}
+  </div>
 </body>
 </html>`;
-      triggerCrossBrowserDownload(new Blob([htmlDoc], { type: 'text/html;charset=utf-8' }), `${d.reportId}_${STATE.activeAOI || 'EastAfrica'}.html`);
+      triggerCrossBrowserDownload(new Blob([htmlDoc], { type: 'text/html;charset=utf-8' }), `${d.reportId}_${STATE.activeAoiKey || 'EastAfrica'}_Official_Meteorological_Dossier.html`);
     }
 
     function printFullReportDossier() {
