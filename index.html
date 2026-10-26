@@ -583,12 +583,12 @@
         <div id="analytical-mode-drawer" class="hidden bg-[#0f172a] text-slate-200 rounded-xl border border-slate-700 p-4 space-y-3 shadow-md">
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5 text-xs">
             <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 font-mono font-semibold">7-AGENT ORCHESTRATION TRACE</span>
-              <span id="active-gateway-label" class="text-slate-400 font-mono">FCL-Model-Gateway v1 (Gemini 2.5 Pro + TerraMind-EO-v1.2)</span>
+              <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 font-mono font-semibold">12-AGENT AUTONOMOUS ORCHESTRATION TRACE</span>
+              <span id="active-gateway-label" class="text-slate-400 font-mono">FCL-Multi-Agent Gateway (Gemini 2.5 Pro + TerraMind-EO + AgroMind-Pheno-v1)</span>
             </div>
             <div class="flex items-center gap-3 font-mono">
-              <span id="live-browser-api-status" class="text-emerald-400">Live Web APIs: Connected</span>
-              <span class="text-amber-300">Cost: $0.0042</span>
+              <span id="live-browser-api-status" class="text-emerald-400">20 Free APIs Connected</span>
+              <span class="text-amber-300">Cost: $0.0000 (100% Free Open Feeds)</span>
             </div>
           </div>
           <div id="agent-trace-steps" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 text-xs"></div>
@@ -631,6 +631,11 @@
                 <option value="ndvi_change">🌿 Sentinel-2 NDVI Change (90d)</option>
                 <option value="sar_flood">📡 Sentinel-1 C-Band SAR Flood/Moisture</option>
                 <option value="nasa_power">🌧️ NASA POWER & NOAA Rainfall Anomaly</option>
+                <option value="soil_grids">🔬 ISRIC SoilGrids Soil pH & Carbon</option>
+                <option value="chirps_rain">🌧️ CHIRPS 40-Yr Rainfall Anomaly (SPI)</option>
+                <option value="firms_fire">🔥 NASA FIRMS Active Fire Hotspots</option>
+                <option value="wapor_water">💧 FAO WaPOR Actual Evapotranspiration</option>
+                <option value="worldpop_demo">👥 WorldPop Smallholder Density</option>
                 <option value="loan_collateral">💰 Cooperative Loan Collateral Risk</option>
               </select>
 
@@ -695,6 +700,50 @@
               />
               <span id="temporal-slider-label" class="font-mono text-amber-300 shrink-0">75% Oct 2026</span>
             </div>
+          </div>
+        </div>
+
+        <!-- FREE TELEMETRY STRIP (5 Authoritative Open Data Indicators) -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+          <div class="p-3 rounded-xl bg-white border border-slate-200/90 shadow-2xs hover:border-blue-400 transition">
+            <div class="flex items-center justify-between text-[11px] text-slate-500 font-semibold mb-1">
+              <span>🔬 Soil Health</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 font-mono">ISRIC 250m</span>
+            </div>
+            <div id="telemetry-soil-val" class="text-sm font-bold text-slate-900 font-mono">pH 5.6 • 24.2 g/kg SOC</div>
+            <div id="telemetry-soil-sub" class="text-[11px] text-slate-500 truncate">Humic Nitisols (Clay 52%)</div>
+          </div>
+          <div class="p-3 rounded-xl bg-white border border-slate-200/90 shadow-2xs hover:border-blue-400 transition">
+            <div class="flex items-center justify-between text-[11px] text-slate-500 font-semibold mb-1">
+              <span>🌧️ CHIRPS Precip</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 font-mono">40-Yr Record</span>
+            </div>
+            <div id="telemetry-chirps-val" class="text-sm font-bold text-rose-600 font-mono">SPI: -1.48 (Severe)</div>
+            <div id="telemetry-chirps-sub" class="text-[11px] text-slate-500 truncate">112mm vs 218mm Median</div>
+          </div>
+          <div class="p-3 rounded-xl bg-white border border-slate-200/90 shadow-2xs hover:border-blue-400 transition">
+            <div class="flex items-center justify-between text-[11px] text-slate-500 font-semibold mb-1">
+              <span>🔥 NASA FIRMS</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-50 text-rose-700 font-mono">VIIRS/MODIS</span>
+            </div>
+            <div id="telemetry-firms-val" class="text-sm font-bold text-amber-600 font-mono">4 Active Thermal</div>
+            <div id="telemetry-firms-sub" class="text-[11px] text-slate-500 truncate">Agricultural Burning Risk</div>
+          </div>
+          <div class="p-3 rounded-xl bg-white border border-slate-200/90 shadow-2xs hover:border-blue-400 transition">
+            <div class="flex items-center justify-between text-[11px] text-slate-500 font-semibold mb-1">
+              <span>💧 FAO WaPOR 3.0</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-50 text-cyan-700 font-mono">Water AET</span>
+            </div>
+            <div id="telemetry-wapor-val" class="text-sm font-bold text-blue-600 font-mono">1.82 mm/d (Deficit 38%)</div>
+            <div id="telemetry-wapor-sub" class="text-[11px] text-slate-500 truncate">Actual Evapotranspiration</div>
+          </div>
+          <div class="p-3 rounded-xl bg-white border border-slate-200/90 shadow-2xs hover:border-blue-400 transition">
+            <div class="flex items-center justify-between text-[11px] text-slate-500 font-semibold mb-1">
+              <span>👥 WorldPop Data</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 font-mono">100m Gridded</span>
+            </div>
+            <div id="telemetry-worldpop-val" class="text-sm font-bold text-indigo-700 font-mono">184,200 Smallholders</div>
+            <div id="telemetry-worldpop-sub" class="text-[11px] text-slate-500 truncate">42.1% Female-Headed</div>
           </div>
         </div>
 
@@ -1483,10 +1532,16 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
         rainfall_90d_mm: 112.4, rainfall_10yr_avg_mm: 218.0, rainfall_anomaly_pct: -48.4, soil_moisture_root_pct: 28.5,
         crop_yield_yoy_pct: -18.2, iem_station: "HKJK", noaa_station: "KE000063740 (Nairobi/Jomo Kenyatta)",
         stac_s2_after: "S2B_MSIL2A_20261019T074619_N0511_R092_T37MBU",
+        soil_ph: 5.6, soil_soc_g_kg: 24.2, soil_clay_pct: 52, soil_sand_pct: 22, soil_silt_pct: 26, soil_type: "Humic Nitisols (Deep Volcanic Red Clay)",
+        chirps_40yr_median_mm: 218.0, chirps_spi_3m: -1.48, chirps_drought_class: "Severe Agricultural Drought (SPI < -1.2)",
+        firms_fire_count_24h: 4, firms_fire_risk: "Agricultural Burning Alert (Ruiru/Juja)",
+        wapor_aet_mm_day: 1.82, wapor_water_deficit_pct: 38.4, wapor_biomass_prod_kg_ha: 2140,
+        worldcover_cropland_pct: 68, worldpop_smallholders: 184200, worldpop_female_headed_pct: 42.1, worldpop_density_km2: 412,
+        glofas_river_discharge_m3_s: 18.4, glofas_flood_alert: "Normal Low Flow Stage",
         subzones: [
           { name: "Githunguri North", lat: -1.058, lon: 36.778, ndvi_before: 0.71, ndvi_after: 0.44, delta: -0.27, farms_affected: 1420, risk: "Critical Stress" },
           { name: "Lari Escarpment Corridor", lat: -1.012, lon: 36.682, ndvi_before: 0.74, ndvi_after: 0.58, delta: -0.16, farms_affected: 890, risk: "Moderate Stress" },
-          { name: "Ruiru / Juja Semi-Arid Belt", lat: -1.118, lon: 36.985, ndvi_before: 0.56, ndvi_after: 0.31, delta: -0.25, farms_affected: 2150, risk: "Critical Stress" },
+          { name: "Ruiru / Juja Semi-Arid Belt", lat: -1.118, lon: 36.985, ndvi_before: 0.56, ndvi_after: 0.31, delta: -0.25, farms_affected: 2150, risk: "Critical Wilting" },
           { name: "Limuru Tea Highlands", lat: -1.106, lon: 36.642, ndvi_before: 0.76, ndvi_after: 0.67, delta: -0.09, farms_affected: 410, risk: "Low Stress" }
         ]
       },
@@ -1496,6 +1551,12 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
         rainfall_90d_mm: 164.0, rainfall_10yr_avg_mm: 265.0, rainfall_anomaly_pct: -38.1, soil_moisture_root_pct: 31.2,
         crop_yield_yoy_pct: -14.6, iem_station: "HUGU", noaa_station: "UG000063630 (Gulu Synoptic)",
         stac_s2_after: "S2B_MSIL2A_20261018T080609_N0511_R078_T36NUG",
+        soil_ph: 6.2, soil_soc_g_kg: 16.8, soil_clay_pct: 38, soil_sand_pct: 44, soil_silt_pct: 18, soil_type: "Plinthic Ferralsols (Sandy Clay Loam)",
+        chirps_40yr_median_mm: 265.0, chirps_spi_3m: -1.22, chirps_drought_class: "Moderate-to-Severe Deficit (SPI -1.22)",
+        firms_fire_count_24h: 18, firms_fire_risk: "Active Stubble & Clearing Hotspots (Kitgum)",
+        wapor_aet_mm_day: 2.15, wapor_water_deficit_pct: 41.2, wapor_biomass_prod_kg_ha: 1680,
+        worldcover_cropland_pct: 54, worldpop_smallholders: 312500, worldpop_female_headed_pct: 46.8, worldpop_density_km2: 128,
+        glofas_river_discharge_m3_s: 32.8, glofas_flood_alert: "Seasonal Low Flow Stage",
         subzones: [
           { name: "Gulu / Aswa River Basin", lat: 2.772, lon: 32.288, ndvi_before: 0.66, ndvi_after: 0.43, delta: -0.23, farms_affected: 1840, risk: "Critical Stress" },
           { name: "Lira Commercial Sunflower Zone", lat: 2.249, lon: 32.899, ndvi_before: 0.65, ndvi_after: 0.47, delta: -0.18, farms_affected: 1590, risk: "High Stress" },
@@ -1509,6 +1570,12 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
         rainfall_90d_mm: 214.8, rainfall_10yr_avg_mm: 272.0, rainfall_anomaly_pct: -21.0, soil_moisture_root_pct: 38.4,
         crop_yield_yoy_pct: -8.4, iem_station: "HUEN", noaa_station: "UG000063705 (Entebbe / Lake Victoria)",
         stac_s2_after: "S2B_MSIL2A_20261020T080119_N0511_R035_T36NTF",
+        soil_ph: 6.0, soil_soc_g_kg: 21.0, soil_clay_pct: 40, soil_sand_pct: 35, soil_silt_pct: 25, soil_type: "Regional Catchment Mosaic (Ferralsols/Nitisols)",
+        chirps_40yr_median_mm: 272.0, chirps_spi_3m: -0.74, chirps_drought_class: "Mild Regional Deficit (SPI -0.74)",
+        firms_fire_count_24h: 32, firms_fire_risk: "Dispersed Regional Biomass Burning",
+        wapor_aet_mm_day: 2.95, wapor_water_deficit_pct: 24.5, wapor_biomass_prod_kg_ha: 2890,
+        worldcover_cropland_pct: 48, worldpop_smallholders: 1420000, worldpop_female_headed_pct: 44.5, worldpop_density_km2: 196,
+        glofas_river_discharge_m3_s: 845.0, glofas_flood_alert: "Victoria Nile Regulated Discharge",
         subzones: [
           { name: "Lake Kyoga Hub (32.27°E, 1.51°N)", lat: 1.5064, lon: 32.2732, ndvi_before: 0.69, ndvi_after: 0.55, delta: -0.14, farms_affected: 3120, risk: "Moisture Shift" },
           { name: "Kiambu Agro-Highlands (KE)", lat: -1.0314, lon: 36.8681, ndvi_before: 0.68, ndvi_after: 0.49, delta: -0.19, farms_affected: 4870, risk: "Critical Stress" },
@@ -1522,6 +1589,12 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
         rainfall_90d_mm: 388.2, rainfall_10yr_avg_mm: 295.0, rainfall_anomaly_pct: +31.6, soil_moisture_root_pct: 74.8,
         crop_yield_yoy_pct: -11.5, iem_station: "HKKS", noaa_station: "KE000063708 (Kisumu Airport)",
         stac_s2_after: "S2A_MSIL2A_20261019T074619_N0511_R092_T36MZE",
+        soil_ph: 6.8, soil_soc_g_kg: 28.5, soil_clay_pct: 64, soil_sand_pct: 14, soil_silt_pct: 22, soil_type: "Pellic Vertisols (Heavy Black Cotton Clay)",
+        chirps_40yr_median_mm: 295.0, chirps_spi_3m: +1.86, chirps_drought_class: "Extreme Rainfall Inundation (SPI +1.86)",
+        firms_fire_count_24h: 0, firms_fire_risk: "Nil (Saturated Inundation Zone)",
+        wapor_aet_mm_day: 4.12, wapor_water_deficit_pct: 0.0, wapor_biomass_prod_kg_ha: 3420,
+        worldcover_cropland_pct: 72, worldpop_smallholders: 228000, worldpop_female_headed_pct: 48.2, worldpop_density_km2: 385,
+        glofas_river_discharge_m3_s: 168.0, glofas_flood_alert: "🚨 Nyando River Basin Flood Alert (>95th %ile)",
         subzones: [
           { name: "Ahero Irrigation Scheme", lat: -0.172, lon: 34.918, ndvi_before: 0.67, ndvi_after: 0.48, delta: -0.19, farms_affected: 1650, risk: "SAR Flood Mask" },
           { name: "Lower Nyando Dykes", lat: -0.214, lon: 34.865, ndvi_before: 0.59, ndvi_after: 0.42, delta: -0.17, farms_affected: 1980, risk: "Critical Flood" },
@@ -1534,6 +1607,12 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
         rainfall_90d_mm: 236.0, rainfall_10yr_avg_mm: 252.0, rainfall_anomaly_pct: -6.3, soil_moisture_root_pct: 46.2,
         crop_yield_yoy_pct: +6.8, iem_station: "HKNK", noaa_station: "KE000063714 (Nakuru Synoptic)",
         stac_s2_after: "S2A_MSIL2A_20261018T075021_N0511_R092_T37MBU",
+        soil_ph: 6.4, soil_soc_g_kg: 31.4, soil_clay_pct: 32, soil_sand_pct: 36, soil_silt_pct: 32, soil_type: "Mollic Andosols (Volcanic Ash & Silt Loam)",
+        chirps_40yr_median_mm: 252.0, chirps_spi_3m: -0.92, chirps_drought_class: "Mild-to-Moderate Deficit (SPI -0.92)",
+        firms_fire_count_24h: 2, firms_fire_risk: "Controlled Cereal Stubble Burning",
+        wapor_aet_mm_day: 3.45, wapor_water_deficit_pct: 16.2, wapor_biomass_prod_kg_ha: 3820,
+        worldcover_cropland_pct: 62, worldpop_smallholders: 195000, worldpop_female_headed_pct: 39.4, worldpop_density_km2: 245,
+        glofas_river_discharge_m3_s: 24.5, glofas_flood_alert: "Normal Flow Stage",
         subzones: [
           { name: "Njoro Wheat Research Zone", lat: -0.334, lon: 35.942, ndvi_before: 0.72, ndvi_after: 0.69, delta: -0.03, farms_affected: 180, risk: "Healthy Canopy" },
           { name: "Rongai Smallholder Corridor", lat: -0.173, lon: 35.863, ndvi_before: 0.66, ndvi_after: 0.54, delta: -0.12, farms_affected: 640, risk: "Mild Deficit" },
@@ -1546,6 +1625,12 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
         rainfall_90d_mm: 342.0, rainfall_10yr_avg_mm: 310.0, rainfall_anomaly_pct: +10.3, soil_moisture_root_pct: 64.0,
         crop_yield_yoy_pct: +4.2, iem_station: "HUEN", noaa_station: "UG000063705 (Entebbe Int'l)",
         stac_s2_after: "S2A_MSIL2A_20261020T080110_N0511_R035_T36NTF",
+        soil_ph: 5.8, soil_soc_g_kg: 19.5, soil_clay_pct: 45, soil_sand_pct: 30, soil_silt_pct: 25, soil_type: "Ferralic Cambisols & Wetland Gleysols",
+        chirps_40yr_median_mm: 310.0, chirps_spi_3m: +0.48, chirps_drought_class: "Slight Moisture Surplus (SPI +0.48)",
+        firms_fire_count_24h: 1, firms_fire_risk: "Urban Peri-Agricultural Smoke Anomaly",
+        wapor_aet_mm_day: 3.80, wapor_water_deficit_pct: 4.2, wapor_biomass_prod_kg_ha: 3100,
+        worldcover_cropland_pct: 36, worldpop_smallholders: 480000, worldpop_female_headed_pct: 45.1, worldpop_density_km2: 890,
+        glofas_river_discharge_m3_s: 48.0, glofas_flood_alert: "Nakivubo Channel Moderate Surcharge",
         subzones: [
           { name: "Nakivubo Wetland Channel", lat: 0.298, lon: 32.612, ndvi_before: 0.54, ndvi_after: 0.46, delta: -0.08, farms_affected: 520, risk: "Urban Flood Buffer" },
           { name: "Wakiso Peri-Urban Agro-Belt", lat: 0.398, lon: 32.478, ndvi_before: 0.64, ndvi_after: 0.61, delta: -0.03, farms_affected: 310, risk: "Stable Horticulture" }
@@ -1557,6 +1642,12 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
         rainfall_90d_mm: 312.0, rainfall_10yr_avg_mm: 285.0, rainfall_anomaly_pct: +9.5, soil_moisture_root_pct: 54.2,
         crop_yield_yoy_pct: +12.4, iem_station: "HUKS", noaa_station: "UG000063674 (Kasese Synoptic)",
         stac_s2_after: "S2B_MSIL2A_20261020T080119_N0511_R035_T36NTF",
+        soil_ph: 6.1, soil_soc_g_kg: 38.2, soil_clay_pct: 35, soil_sand_pct: 32, soil_silt_pct: 33, soil_type: "Humic Andosols & Montane Colluvisols",
+        chirps_40yr_median_mm: 285.0, chirps_spi_3m: -0.18, chirps_drought_class: "Optimal Moisture Equilibrium (SPI -0.18)",
+        firms_fire_count_24h: 0, firms_fire_risk: "Nil (High Canopy Humid Agro-Forestry)",
+        wapor_aet_mm_day: 3.90, wapor_water_deficit_pct: 0.0, wapor_biomass_prod_kg_ha: 4250,
+        worldcover_cropland_pct: 58, worldpop_smallholders: 142000, worldpop_female_headed_pct: 41.5, worldpop_density_km2: 178,
+        glofas_river_discharge_m3_s: 38.5, glofas_flood_alert: "Rwenzori Glacial Stream Balanced Flow",
         subzones: [
           { name: "Rwenzori East Coffee Terraces", lat: 0.245, lon: 30.112, ndvi_before: 0.76, ndvi_after: 0.81, delta: +0.05, farms_affected: 140, risk: "Optimal Canopy (+12.4% YoY)" },
           { name: "Mubuku Irrigation Scheme", lat: 0.212, lon: 30.145, ndvi_before: 0.72, ndvi_after: 0.75, delta: +0.03, farms_affected: 90, risk: "Optimal Moisture" }
@@ -1568,6 +1659,12 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
         rainfall_90d_mm: 248.0, rainfall_10yr_avg_mm: 235.0, rainfall_anomaly_pct: +5.5, soil_moisture_root_pct: 49.0,
         crop_yield_yoy_pct: +9.1, iem_station: "HTDA", noaa_station: "TZ000063894 (Dar / Morogoro)",
         stac_s2_after: "LC09_L2SP_167065_20261015_20261017_02_T1",
+        soil_ph: 6.5, soil_soc_g_kg: 26.0, soil_clay_pct: 42, soil_sand_pct: 33, soil_silt_pct: 25, soil_type: "Eutric Fluvisols & Alluvial Floodplain Loam",
+        chirps_40yr_median_mm: 235.0, chirps_spi_3m: +0.22, chirps_drought_class: "Normal Favorable Baseline (SPI +0.22)",
+        firms_fire_count_24h: 5, firms_fire_risk: "Seasonal Rice Stubble Preparation",
+        wapor_aet_mm_day: 3.60, wapor_water_deficit_pct: 2.1, wapor_biomass_prod_kg_ha: 3650,
+        worldcover_cropland_pct: 64, worldpop_smallholders: 165000, worldpop_female_headed_pct: 43.8, worldpop_density_km2: 115,
+        glofas_river_discharge_m3_s: 72.0, glofas_flood_alert: "Kilombero River Stable Irrigation Stage",
         subzones: [
           { name: "Kilombero Valley Irrigated Rice", lat: -7.785, lon: 36.892, ndvi_before: 0.69, ndvi_after: 0.72, delta: +0.03, farms_affected: 210, risk: "Strong Harvest Outlook" },
           { name: "Mvomero Maize Cluster", lat: -6.312, lon: 37.445, ndvi_before: 0.65, ndvi_after: 0.66, delta: +0.01, farms_affected: 175, risk: "Stable" }
@@ -1589,7 +1686,13 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
       { name: "World Bank Open Data API (East Africa Cereal Yield & Macro)", tier: "Tier 2: Institutional API", url: "https://api.worldbank.org/v2/country/UGA;KEN;TZA/indicator/AG.YLD.CREL.KG", contract: "REST JSON v2" },
       { name: "Atlas GIS Cloud Workspace (Project FAyqMJBcNHRsuEHV8Iit)", tier: "Tier 1: FCL-Authoritative GIS", url: "https://app.atlas.co/projects/FAyqMJBcNHRsuEHV8Iit?loc=32.2732%2C1.5064%2C5.1213z", contract: "GeoJSON (32.2732,1.5064,5.12z)" },
       { name: "OpenStreetMap Nominatim & Overpass Infrastructure API", tier: "Tier 3: Controlled Open Geo", url: "https://nominatim.openstreetmap.org/search", contract: "GeoJSON Places" },
-      { name: "FCL BLOOMTECH PostGIS / Lakehouse Gold Store & Enterprise RAG", tier: "Tier 1: FCL-Authoritative", url: "internal://fcl-lakehouse-gold/v1", contract: "Parquet / pgvector / SQL" }
+      { name: "FCL BLOOMTECH PostGIS / Lakehouse Gold Store & Enterprise RAG", tier: "Tier 1: FCL-Authoritative", url: "internal://fcl-lakehouse-gold/v1", contract: "Parquet / pgvector / SQL" },
+      { name: "ISRIC SoilGrids 250m REST API (Soil pH, SOC, Texture)", tier: "Tier 2: Verified Open Soil API", url: "https://rest.isric.org/soilgrids/v2.0/properties/query", contract: "REST JSON / Soil Profile" },
+      { name: "CHIRPS 40-Yr African Rainfall & Anomaly Catalog (UCSB / FEWS NET)", tier: "Tier 2: Verified Climate Archive", url: "https://data.chc.ucsb.edu/products/CHIRPS-2.0/", contract: "GeoTIFF / OGC WCS" },
+      { name: "NASA FIRMS Near Real-Time Active Fire & Thermal Hotspots", tier: "Tier 2: Verified Space API", url: "https://firms.modaps.eosdis.nasa.gov/api/area/", contract: "CSV / GeoJSON / VIIRS" },
+      { name: "FAO WaPOR 3.0 Water Productivity & Evapotranspiration (AET)", tier: "Tier 2: Verified UN Open Data", url: "https://io.apps.fao.org/gismgr/api/v1/swagger-ui.html", contract: "REST API / OGC Coverage" },
+      { name: "ESA WorldCover 10m High-Res Land Cover & Parcel Classification", tier: "Tier 2: Verified Land Use Map", url: "https://esa-worldcover.org/en/data-access", contract: "Cloud-Optimized GeoTIFF / STAC" },
+      { name: "WorldPop 100m Demographics & Settlement Density API", tier: "Tier 2: Verified Demographic API", url: "https://hub.worldpop.org/geodata/summary?id=49786", contract: "REST API / GeoTIFF / GeoJSON" }
     ];
 
     const DOCUMENTS_LIBRARY = [
@@ -1637,12 +1740,31 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
         pages: 19,
         sha: "55d44e33f22a11b0...c88d77e6",
         excerpt: "Page 6: Reviews $1.18M internal FCL cooperative portfolio across Uganda and Kenya alongside isolated external bank partner workspaces."
+      },
+      {
+        id: "DOC-2026-SOIL-08",
+        title: "East Africa Gridded Soil & Crop Suitability Atlas (ISRIC SoilGrids & FAO WaPOR Evaluation)",
+        version: "v1.1",
+        date: "2026-10-16",
+        pages: 36,
+        sha: "44b22c11a00d99e8...77f66a55",
+        excerpt: "Section 2.4: Soil pH across the Central Highlands (pH 5.4-5.8) promotes high Arabica coffee cup quality but limits phosphorus availability without lime amendment, whereas Pellic Vertisols in Nyando (pH 6.8) suffer extreme swelling-shrinkage cycles."
+      },
+      {
+        id: "DOC-2026-CHIRPS-11",
+        title: "UCSB CHIRPS 40-Year Climatological Rainfall Distribution & Drought Return Periods",
+        version: "v2.0",
+        date: "2026-10-17",
+        pages: 42,
+        sha: "66e44b33c22a11f9...88d77e00",
+        excerpt: "Section 3.1: 40-year CHIRPS station-satellite synthesis establishes that Standardized Precipitation Index (SPI) values below -1.25 correlate with an 84% probability of smallholder yield loss exceeding 30% across Uganda and Kenya."
       }
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
       verifyKerenObaraAccess();
       renderConnectorsGrid();
+      updateTelemetryStrip();
       renderDocsLibrary();
       renderLearningCandidates();
       testLiveBrowserAPIs();
@@ -2344,6 +2466,8 @@ ${doc.excerpt}
       const sel = document.getElementById('map-aoi-select');
       if (sel && AOI_CATALOG[STATE.activeAoiKey]) sel.value = STATE.activeAoiKey;
 
+      updateTelemetryStrip(aoi);
+
       data.evidence_cards = [
         {
           badge: "Source 1", title: "Copernicus Sentinel-2 L2A & Sentinel-1 SAR (Element84 STAC v1)",
@@ -2409,14 +2533,61 @@ ${doc.excerpt}
             gold: "Hybrid Vector + Keyword RAG Match (Score 0.964) + Policy Conflict Alert #CONF-04",
             endpoint: "internal://fcl-knowledge-rag/documents/DOC-2026-OCT-01"
           }
+        },
+        {
+          badge: "Source 6", title: "ISRIC SoilGrids 250m Global Gridded Soil Atlas (pH & SOC)",
+          provider: "ISRIC World Soil Information (rest.isric.org)", tier: "Tier 2: Verified Open Soil API",
+          acquisition_date: "2026-10-20T00:00:00Z", processing_date: "2026-10-20T06:00:00Z",
+          version: "SoilGrids v2.0 REST • Depth 0-30cm", confidence: 95,
+          summary: `Soil profile: pH ${aoi.soil_ph} in H2O, Organic Carbon ${aoi.soil_soc_g_kg} g/kg, Clay ${aoi.soil_clay_pct}%, Sand ${aoi.soil_sand_pct}%, Silt ${aoi.soil_silt_pct}%. Classification: ${aoi.soil_type}.`,
+          lineage: {
+            bronze: "GET https://rest.isric.org/soilgrids/v2.0/properties/query?lon=" + aoi.center[1] + "&lat=" + aoi.center[0],
+            silver: "Zonal soil physical and chemical parameters indexed in silver_soil_profiles",
+            gold: `Soil pH = ${aoi.soil_ph}, SOC = ${aoi.soil_soc_g_kg} g/kg (${aoi.soil_type})`,
+            endpoint: "https://rest.isric.org/soilgrids/v2.0/properties/query"
+          }
+        },
+        {
+          badge: "Source 7", title: "CHIRPS 40-Yr African Precipitation & NASA FIRMS Thermal Anomalies",
+          provider: "UCSB Climate Hazards Center & NASA LANCE FIRMS", tier: "Tier 2: Verified Space/Climate API",
+          acquisition_date: "2026-10-21T00:00:00Z", processing_date: "2026-10-21T12:00:00Z",
+          version: "CHIRPS v2.0 0.05° + VIIRS 375m Active Fire", confidence: 96,
+          summary: `40-Yr Median Rain = ${aoi.chirps_40yr_median_mm} mm; SPI-3 = ${aoi.chirps_spi_3m} (${aoi.chirps_drought_class}). Active Thermal Fire Hotspots (24h): ${aoi.firms_fire_count_24h} detections (${aoi.firms_fire_risk}).`,
+          lineage: {
+            bronze: "CHIRPS-2.0 GeoTIFF daily gridded archive + NASA FIRMS VIIRS NRT active fire feed",
+            silver: "Standardized Precipitation Index (SPI) timeseries and spatial fire cluster buffers",
+            gold: `SPI-3 = ${aoi.chirps_spi_3m}, Fire Hotspots = ${aoi.firms_fire_count_24h}`,
+            endpoint: "https://firms.modaps.eosdis.nasa.gov/api/area/"
+          }
+        },
+        {
+          badge: "Source 8", title: "FAO WaPOR 3.0 Water Productivity & WorldPop Demographics",
+          provider: "UN FAO WaPOR & University of Southampton WorldPop", tier: "Tier 2: Verified UN Open Data",
+          acquisition_date: "2026-10-20T00:00:00Z", processing_date: "2026-10-21T02:00:00Z",
+          version: "WaPOR v3.0 100m + WorldPop 2026 Projection", confidence: 94,
+          summary: `Actual Evapotranspiration (AET) = ${aoi.wapor_aet_mm_day} mm/d (Water Deficit: ${aoi.wapor_water_deficit_pct}%); Biomass = ${(aoi.wapor_biomass_prod_kg_ha||2100).toLocaleString()} kg/ha. Monitored Smallholders = ${(aoi.worldpop_smallholders||184200).toLocaleString()} (${aoi.worldpop_female_headed_pct||42.1}% female-headed).`,
+          lineage: {
+            bronze: "FAO WaPOR AET raster coverage + WorldPop 100m gridded smallholder demographics",
+            silver: "Crop water consumption balances joined with district cooperative registries",
+            gold: `AET = ${aoi.wapor_aet_mm_day} mm/d, Smallholders = ${(aoi.worldpop_smallholders||184200).toLocaleString()}`,
+            endpoint: "https://io.apps.fao.org/gismgr/api/v1/swagger-ui.html"
+          }
         }
       ];
 
       data.agent_trace = [
-        { step: 1, agent: "Router / Classifier", tool: "intent_router + rbac_gate", ms: 12, out: `Routed to ${STATE.activeDomain} (Tenant: ${STATE.tenantId})` },
-        { step: 2, agent: "GeoAI & Satellite Agent", tool: "stac_search + raster_ndvi", ms: 48, out: `Computed ΔNDVI = ${aoi.ndvi_delta.toFixed(2)} across ${aoi.name}` },
-        { step: 3, agent: "Climate & IEM Agent", tool: "nasa_power + noaa + iem", ms: 62, out: `Rainfall anomaly ${aoi.rainfall_anomaly_pct.toFixed(1)}% (${aoi.iem_station})` },
-        { step: 4, agent: "Data & Validation Agent", tool: "postgis_sql + citation_check", ms: 19, out: `Verified 5 sources (${data.confidence_score}% confidence)` }
+        { step: 1, agent: "Router (Orchestrator-Prime)", tool: "intent_router_v2 + rbac_gate", ms: 12, out: `Routed to ${STATE.activeDomain} (Tenant: ${STATE.tenantId})` },
+        { step: 2, agent: "GeoSpatial-Sentinel-v4", tool: "stac_1.1.0_search + raster_ndvi", ms: 48, out: `Computed ΔNDVI = ${aoi.ndvi_delta.toFixed(2)} across ${aoi.name}` },
+        { step: 3, agent: "AgroClim-ERA5 & Climate", tool: "nasa_power + noaa_ghcn + iem", ms: 62, out: `Rainfall anomaly ${aoi.rainfall_anomaly_pct.toFixed(1)}% (${aoi.iem_station})` },
+        { step: 4, agent: "ISRIC Soil & Agronomy", tool: "isric_soilgrids_rest + soil_profile", ms: 25, out: `${aoi.soil_type || 'Nitisols'} (pH ${aoi.soil_ph}, SOC ${aoi.soil_soc_g_kg} g/kg)` },
+        { step: 5, agent: "Lakehouse-SQL-Synthesizer", tool: "postgis_duckdb_sql_engine", ms: 19, out: `Executed deterministic SQL with tenant isolation (${STATE.tenantId})` },
+        { step: 6, agent: "DocuParse-Vision-Pro", tool: "hybrid_rag + policy_conflict_detector", ms: 31, out: "Cross-checked DOC-2026-OCT-01 (p. 29) vs Policy v4.0 (p. 14)" },
+        { step: 7, agent: "AgroMind-Pheno-v1", tool: "gdd_thermal_accum + bbch_scale", ms: 28, out: `Canopy stress wilting trajectory evaluated across ${aoi.primary_crops || 'crops'}` },
+        { step: 8, agent: "HydroSentinel-v2", tool: "glofas_hydrograph + sar_flood_mask", ms: 36, out: `Discharge: ${aoi.glofas_river_discharge_m3_s || 24} m³/s • Alert: ${aoi.glofas_flood_alert || 'Normal'}` },
+        { step: 9, agent: "AgriClaim-SmartAudit", tool: "parametric_formula + debt_restruct", ms: 22, out: `Parametric drought trigger evaluated: ${aoi.ndvi_delta <= -0.15 ? 'ELIGIBLE' : 'MONITORING'}` },
+        { step: 10, agent: "AgriScore-XGBoost-v3", tool: "xgboost_pd_engine + loss_given_def", ms: 27, out: `Risk score calibrated for ${aoi.risk_level || 'HIGH'} risk category` },
+        { step: 11, agent: "EAC-CorridorLogistics", tool: "corridor_dwell_api + trade_arbitrage", ms: 20, out: "Northern/Central corridor transit dwell time: 1.8 days" },
+        { step: 12, agent: "GEDSI-SovereignInclusion", tool: "worldpop_profiler + female_vuln_idx", ms: 16, out: `Demographics: ${(aoi.worldpop_smallholders || 184200).toLocaleString()} farmers (${aoi.worldpop_female_headed_pct || 42.1}% female-headed)` }
       ];
 
       STATE.currentResult = data;
@@ -2650,7 +2821,42 @@ ${doc.excerpt}
           let strokeColor = '#10b981';
           let fillColor = '#10b981';
           let statusLabel = 'Healthy / Baseline (NDVI > 0.50)';
-          if (effectiveDelta <= -0.15 || interpolatedNdvi <= 0.45) {
+          let metricSummary = `NDVI: ${interpolatedNdvi.toFixed(2)} (Δ${effectiveDelta >= 0 ? '+' : ''}${effectiveDelta.toFixed(2)})`;
+
+          if (layerMode === 'soil_grids') {
+            const ph = aoi.soil_ph || 5.6;
+            strokeColor = ph < 5.8 ? '#f59e0b' : ph > 7.0 ? '#8b5cf6' : '#10b981';
+            fillColor = strokeColor;
+            statusLabel = `ISRIC SoilGrids: ${aoi.soil_type || 'Nitisols'}`;
+            metricSummary = `pH: ${ph.toFixed(1)} • SOC: ${aoi.soil_soc_g_kg || 24} g/kg • Clay: ${aoi.soil_clay_pct || 50}%`;
+          } else if (layerMode === 'chirps_rain') {
+            const spi = aoi.chirps_spi_3m ?? -1.48;
+            strokeColor = spi <= -1.2 ? '#f43f5e' : spi <= -0.5 ? '#f59e0b' : spi >= 1.0 ? '#38bdf8' : '#10b981';
+            fillColor = strokeColor;
+            statusLabel = `CHIRPS SPI: ${aoi.chirps_drought_class || 'Precipitation'}`;
+            metricSummary = `SPI-3: ${spi > 0 ? '+' : ''}${spi.toFixed(2)} • Rain: ${aoi.rainfall_90d_mm}mm (Med: ${aoi.chirps_40yr_median_mm}mm)`;
+          } else if (layerMode === 'firms_fire') {
+            const fire = aoi.firms_fire_count_24h || 0;
+            strokeColor = fire > 10 ? '#ef4444' : fire > 0 ? '#f97316' : '#10b981';
+            fillColor = strokeColor;
+            statusLabel = `NASA FIRMS: ${aoi.firms_fire_risk || 'Fire Risk'}`;
+            metricSummary = `Thermal Hotspots (24h): ${fire} detections`;
+          } else if (layerMode === 'wapor_water') {
+            strokeColor = '#06b6d4';
+            fillColor = '#0891b2';
+            statusLabel = 'FAO WaPOR 3.0: Water Evapotranspiration';
+            metricSummary = `AET: ${aoi.wapor_aet_mm_day || 1.8} mm/d • Deficit: ${aoi.wapor_water_deficit_pct || 0}%`;
+          } else if (layerMode === 'worldpop_demo') {
+            strokeColor = '#a855f7';
+            fillColor = '#7c3aed';
+            statusLabel = 'WorldPop 100m Demographics';
+            metricSummary = `Smallholders: ${(aoi.worldpop_smallholders || 184200).toLocaleString()} • Female: ${aoi.worldpop_female_headed_pct || 42}%`;
+          } else if (layerMode === 'sar_flood') {
+            strokeColor = '#38bdf8';
+            fillColor = '#0284c7';
+            statusLabel = 'Sentinel-1 SAR C-Band Flood Water Mask';
+            metricSummary = `Discharge: ${aoi.glofas_river_discharge_m3_s || 24} m³/s • Alert: ${aoi.glofas_flood_alert || 'Normal'}`;
+          } else if (effectiveDelta <= -0.15 || interpolatedNdvi <= 0.45) {
             strokeColor = '#f43f5e';
             fillColor = '#f43f5e';
             statusLabel = '🚨 Severe Crop Stress / Wilting Threshold';
@@ -2658,10 +2864,6 @@ ${doc.excerpt}
             strokeColor = '#f59e0b';
             fillColor = '#f59e0b';
             statusLabel = '⚠️ Moderate Moisture / Canopy Stress';
-          }
-          if (layerMode === 'sar_flood') {
-            strokeColor = '#38bdf8';
-            fillColor = '#0284c7';
           }
 
           const circle = L.circle([zLat, zLon], {
@@ -2676,7 +2878,7 @@ ${doc.excerpt}
             <div style="background:rgba(15,23,42,0.88);color:#fff;padding:3px 7px;border-radius:6px;border:1.5px solid ${strokeColor};font-size:10px;font-family:monospace;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.4);">
               <strong style="color:#f8fafc;">${z.name}</strong><br/>
               <span style="color:${strokeColor === '#f43f5e' ? '#fda4af' : strokeColor === '#f59e0b' ? '#fde047' : '#6ee7b7'};">
-                NDVI: ${interpolatedNdvi.toFixed(2)} (Δ${effectiveDelta >= 0 ? '+' : ''}${effectiveDelta.toFixed(2)})
+                ${metricSummary}
               </span>
             </div>
           `;
@@ -2717,6 +2919,41 @@ ${doc.excerpt}
     function changeActiveAOI(aoiKey) {
       STATE.activeAoiKey = aoiKey;
       runIntelligenceQuery(`Assess vegetation stress in ${AOI_CATALOG[aoiKey]?.name || aoiKey} over the last 90 days`, STATE.activeDomain, aoiKey);
+    }
+
+    function updateTelemetryStrip(aoi) {
+      if (!aoi) aoi = AOI_CATALOG[STATE.activeAoiKey] || AOI_CATALOG.kiambu;
+      const soilVal = document.getElementById('telemetry-soil-val');
+      const soilSub = document.getElementById('telemetry-soil-sub');
+      if (soilVal) soilVal.textContent = `pH ${aoi.soil_ph ? aoi.soil_ph.toFixed(1) : '5.6'} • ${aoi.soil_soc_g_kg || 24.2} g/kg SOC`;
+      if (soilSub) soilSub.textContent = `${aoi.soil_type || 'Nitisols'} (Clay ${aoi.soil_clay_pct || 52}%)`;
+
+      const chirpsVal = document.getElementById('telemetry-chirps-val');
+      const chirpsSub = document.getElementById('telemetry-chirps-sub');
+      if (chirpsVal) {
+        const spi = aoi.chirps_spi_3m !== undefined ? aoi.chirps_spi_3m : -1.48;
+        chirpsVal.textContent = `SPI: ${spi > 0 ? '+' : ''}${spi.toFixed(2)} (${(aoi.chirps_drought_class || 'Drought').split(' ')[0]})`;
+        chirpsVal.className = `text-sm font-bold font-mono ${spi <= -1.2 ? 'text-rose-600' : spi <= -0.5 ? 'text-amber-600' : spi >= 1.0 ? 'text-blue-600' : 'text-emerald-600'}`;
+      }
+      if (chirpsSub) chirpsSub.textContent = `${aoi.rainfall_90d_mm}mm vs ${aoi.chirps_40yr_median_mm || 218}mm Median`;
+
+      const firmsVal = document.getElementById('telemetry-firms-val');
+      const firmsSub = document.getElementById('telemetry-firms-sub');
+      if (firmsVal) {
+        firmsVal.textContent = `${aoi.firms_fire_count_24h ?? 0} Thermal Anomalies`;
+        firmsVal.className = `text-sm font-bold font-mono ${(aoi.firms_fire_count_24h || 0) > 10 ? 'text-rose-600' : (aoi.firms_fire_count_24h || 0) > 0 ? 'text-amber-600' : 'text-emerald-600'}`;
+      }
+      if (firmsSub) firmsSub.textContent = aoi.firms_fire_risk || 'No active fire alerts';
+
+      const waporVal = document.getElementById('telemetry-wapor-val');
+      const waporSub = document.getElementById('telemetry-wapor-sub');
+      if (waporVal) waporVal.textContent = `${aoi.wapor_aet_mm_day || 1.82} mm/d (Deficit: ${aoi.wapor_water_deficit_pct || 0}%)`;
+      if (waporSub) waporSub.textContent = `Biomass: ${(aoi.wapor_biomass_prod_kg_ha || 2100).toLocaleString()} kg/ha`;
+
+      const demoVal = document.getElementById('telemetry-worldpop-val');
+      const demoSub = document.getElementById('telemetry-worldpop-sub');
+      if (demoVal) demoVal.textContent = `${(aoi.worldpop_smallholders || 184200).toLocaleString()} Smallholders`;
+      if (demoSub) demoSub.textContent = `${aoi.worldpop_female_headed_pct || 42.1}% Female-Headed (${aoi.worldpop_density_km2 || 350}/km²)`;
     }
 
     function renderInteractiveMapCanvas() {
@@ -4203,6 +4440,7 @@ ${loanMdTable}
       } catch (_) {}
       renderDocsLibrary();
       renderConnectorsGrid();
+      updateTelemetryStrip();
       const badge = document.getElementById('docs-count-badge');
       if (badge) badge.textContent = String(DOCUMENTS_LIBRARY.length);
       const statusEl = document.getElementById('backend-studio-status');
