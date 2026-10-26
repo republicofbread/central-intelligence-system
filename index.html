@@ -180,6 +180,17 @@
         <span id="i18n-full-report-btn">Generate Full Report</span>
       </button>
 
+      <!-- 1-Click Shareable Link Button (Open to anyone with it) -->
+      <button
+        id="share-link-hdr-btn"
+        onclick="openShareLinkModal()"
+        class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-600/30 hover:bg-emerald-600/50 border border-emerald-400/60 text-emerald-200 font-bold text-xs transition cursor-pointer shadow-sm"
+        title="Get shareable link — anyone with the link can view and run queries"
+      >
+        <span>🔗</span>
+        <span id="i18n-share-btn">Share Link</span>
+      </button>
+
       <!-- Interactive Calm Western Narrative Voice-Over Tour Button -->
       <button
         id="voiceover-tour-btn"
@@ -1241,6 +1252,96 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
     </div>
   </div>
 
+  <!-- ===================================================================== -->
+  <!-- SHAREABLE WEB LINK MODAL (Open Access for Anyone with Link)           -->
+  <!-- ===================================================================== -->
+  <div id="share-link-modal" class="no-print hidden fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full border border-slate-200 shadow-2xl overflow-hidden font-sans">
+      <div class="px-5 py-3.5 bg-[#0c1324] text-white flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-base">🔗</span>
+          <div>
+            <h3 class="text-sm font-bold tracking-wide">Share FCL Central Intelligence System</h3>
+            <p class="text-xs text-slate-400">Shareable live web links for anyone with the URL</p>
+          </div>
+        </div>
+        <button onclick="closeModal('share-link-modal')" class="text-slate-400 hover:text-white text-xl leading-none cursor-pointer">&times;</button>
+      </div>
+
+      <div class="p-5 space-y-4 text-xs text-slate-700 bg-slate-50">
+        <!-- 1. Universal Public Share Link -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+              <span>🌐</span><span>Universal Public Link (Anyone with Link)</span>
+            </span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[10px]">Open Access</span>
+          </div>
+          <p class="text-[11px] text-slate-500">
+            Anyone opening this link has immediate, frictionless access to all 6 intelligence domains, satellite telemetry, climate analytics, and full reporting.
+          </p>
+          <div class="flex items-center gap-1.5 bg-slate-100 p-2 rounded-lg border border-slate-200">
+            <input
+              id="public-share-link-input"
+              type="text"
+              readonly
+              value="https://republicofbread.github.io/central-intelligence-system/"
+              class="w-full bg-transparent text-xs font-mono text-slate-800 focus:outline-none select-all"
+            />
+            <button
+              onclick="copyShareLink('https://republicofbread.github.io/central-intelligence-system/', 'Public Link copied! Anyone with it can view the application.')"
+              class="px-3 py-1.5 rounded-md bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shrink-0 transition cursor-pointer shadow-xs"
+            >
+              Copy Link
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Keren Obara Direct Link -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+              <span>🔒</span><span>Direct Recipient Link: Keren Obara (KO-2026-FCL)</span>
+            </span>
+            <span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-bold text-[10px]">Pre-Verified</span>
+          </div>
+          <p class="text-[11px] text-slate-500">
+            Pre-authenticated session for Senior FCL Intelligence Analyst Keren Obara with full governance verification.
+          </p>
+          <div class="flex items-center gap-1.5 bg-slate-100 p-2 rounded-lg border border-slate-200">
+            <input
+              id="keren-share-link-input"
+              type="text"
+              readonly
+              value="https://republicofbread.github.io/central-intelligence-system/?recipient=keren_obara&key=KO-2026-FCL"
+              class="w-full bg-transparent text-xs font-mono text-slate-800 focus:outline-none select-all"
+            />
+            <button
+              onclick="copyShareLink('https://republicofbread.github.io/central-intelligence-system/?recipient=keren_obara&key=KO-2026-FCL', 'Keren Obara link copied!')"
+              class="px-3 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs shrink-0 transition cursor-pointer shadow-xs"
+            >
+              Copy Link
+            </button>
+          </div>
+        </div>
+
+        <!-- Cross Device Ready Banner -->
+        <div class="p-3 rounded-xl bg-blue-50/70 border border-blue-200 text-slate-600 flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm shrink-0">📱</div>
+          <div class="text-[11px] leading-snug">
+            <strong>Cross-Device Ready:</strong> Works on iPhone, Android, iPad, Mac, and Windows with zero installs.
+          </div>
+        </div>
+      </div>
+
+      <div class="px-5 py-3 bg-white border-t border-slate-200 flex items-center justify-end">
+        <button onclick="closeModal('share-link-modal')" class="px-4 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition cursor-pointer">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- COMMAND PALETTE MODAL -->
   <div id="cmd-modal" class="no-print hidden fixed inset-0 bg-slate-950/70 z-50 flex items-start justify-center pt-20 p-4">
     <div class="bg-white rounded-2xl max-w-xl w-full border border-slate-200 shadow-2xl overflow-hidden">
@@ -1278,6 +1379,7 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
   <!-- ===================================================================== -->
   <div id="keren-obara-auth-modal" class="hidden fixed inset-0 bg-[#060a14]/95 backdrop-blur-md z-[100] flex items-center justify-center p-4">
     <div class="bg-[#0c1324] border border-emerald-500/40 rounded-2xl max-w-md w-full shadow-2xl p-6 text-white space-y-5 text-center relative overflow-hidden">
+      <button onclick="closeModal('keren-obara-auth-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl leading-none cursor-pointer">&times;</button>
       <div class="absolute -top-12 -right-12 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
       <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-emerald-600 to-blue-600 flex items-center justify-center shadow-lg border border-emerald-400/40 text-2xl font-black text-white">
         KO
@@ -1315,6 +1417,12 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
         >
           <span>🔓</span>
           <span>Unlock Workspace as Keren Obara</span>
+        </button>
+        <button
+          onclick="grantKerenObaraAccess(true, 'Public Stakeholder'); closeModal('keren-obara-auth-modal');"
+          class="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-xs border border-slate-700 transition cursor-pointer"
+        >
+          🌐 Continue with Open Stakeholder Access
         </button>
         <p id="ko-auth-error" class="hidden text-xs text-rose-400 font-semibold"></p>
       </div>
@@ -1534,16 +1642,23 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
     });
 
     function verifyKerenObaraAccess() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const recipient = urlParams.get('recipient') || urlParams.get('user') || '';
-      const key = urlParams.get('key') || urlParams.get('auth') || urlParams.get('token') || '';
-      const stored = sessionStorage.getItem('fcl_auth_recipient') || localStorage.getItem('fcl_auth_recipient');
+      let recipient = '';
+      let key = '';
+      try {
+        if (typeof URLSearchParams !== 'undefined' && window.location.search) {
+          const urlParams = new URLSearchParams(window.location.search);
+          recipient = urlParams.get('recipient') || urlParams.get('user') || '';
+          key = urlParams.get('key') || urlParams.get('auth') || urlParams.get('token') || '';
+        }
+      } catch (_) {}
 
-      if (stored === 'keren_obara' || key === 'KO-2026-FCL' || recipient.toLowerCase().includes('keren') || key.toLowerCase().includes('ko-2026')) {
-        grantKerenObaraAccess(false);
+      if (recipient.toLowerCase().includes('keren') || key === 'KO-2026-FCL' || key.toLowerCase().includes('ko-2026')) {
+        grantKerenObaraAccess(false, 'Keren Obara');
+      } else if (recipient) {
+        grantKerenObaraAccess(false, recipient);
       } else {
-        const modal = document.getElementById('keren-obara-auth-modal');
-        if (modal) modal.classList.remove('hidden');
+        // Universal open share access for anyone with the link
+        grantKerenObaraAccess(false, 'Public Stakeholder');
       }
     }
 
@@ -1551,26 +1666,48 @@ Observed Soil Moisture: 24.8% | Sentinel-2 L2A NDVI: 0.43 (ΔNDVI -0.27)</textar
       const input = document.getElementById('ko-passcode-input')?.value.trim();
       const err = document.getElementById('ko-auth-error');
       if (input === 'KO-2026-FCL' || input.toLowerCase() === 'keren' || input.toLowerCase() === 'keren obara' || input.toLowerCase() === 'fcl2026') {
-        grantKerenObaraAccess(true);
+        grantKerenObaraAccess(true, 'Keren Obara');
       } else {
-        if (err) {
-          err.textContent = '❌ Access Denied: Invalid security key. Access restricted to Keren Obara.';
-          err.classList.remove('hidden');
-        }
+        grantKerenObaraAccess(true, 'Public Stakeholder');
       }
     }
 
-    function grantKerenObaraAccess(showToast = true) {
+    function grantKerenObaraAccess(showToast = false, userName = 'Authorized Stakeholder') {
       try {
-        sessionStorage.setItem('fcl_auth_recipient', 'keren_obara');
-        localStorage.setItem('fcl_auth_recipient', 'keren_obara');
+        sessionStorage.setItem('fcl_auth_recipient', userName);
+        localStorage.setItem('fcl_auth_recipient', userName);
       } catch (_) {}
       const modal = document.getElementById('keren-obara-auth-modal');
       if (modal) modal.classList.add('hidden');
       const badge = document.getElementById('keren-obara-user-badge');
-      if (badge) badge.classList.remove('hidden');
+      if (badge) {
+        badge.classList.remove('hidden');
+        if (userName.toLowerCase().includes('keren')) {
+          badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span class="font-medium hidden sm:inline">Keren Obara</span><span class="w-5 h-5 rounded-full bg-emerald-600 text-white font-bold text-[10px] flex items-center justify-center">KO</span>`;
+          badge.title = "Verified Active Session: Keren Obara (Senior FCL Intelligence Analyst)";
+        } else {
+          badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span><span class="font-medium hidden sm:inline">Open Access</span><span class="w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-[10px] flex items-center justify-center">OA</span>`;
+          badge.title = "Active Shareable Link: Open Access to Anyone with Link";
+        }
+      }
       if (showToast) {
-        showGlobalToast('✓ Verified: Welcome, Keren Obara (Senior FCL Intelligence Analyst)');
+        showGlobalToast(`✓ Access Active: Welcome (${userName})`);
+      }
+    }
+
+    function openShareLinkModal() {
+      openModal('share-link-modal');
+    }
+
+    function copyShareLink(url, msg = 'Link copied to clipboard!') {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(() => {
+          showGlobalToast(`✓ ${msg}`);
+        }).catch(() => {
+          prompt('Copy shareable link:', url);
+        });
+      } else {
+        prompt('Copy shareable link:', url);
       }
     }
 
@@ -1852,7 +1989,7 @@ ${doc.excerpt}
 
       // 2. Close any open overlays/modals that might block view
       const modalsToClose = [
-        'full-report-modal', 'backend-studio-modal', 'atlas-modal',
+        'share-link-modal', 'full-report-modal', 'backend-studio-modal', 'atlas-modal',
         'connectors-modal', 'docs-library-modal', 'custom-aoi-modal',
         'upload-modal', 'admin-modal', 'cmd-modal', 'lineage-modal'
       ];
