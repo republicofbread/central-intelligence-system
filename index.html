@@ -1864,7 +1864,9 @@ ${doc.excerpt}
       // 3. Reset scroll position immediately on main scroll container & window
       const mainEl = document.querySelector('main');
       if (mainEl) mainEl.scrollTop = 0;
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+        try { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch (_) { window.scrollTo(0, 0); }
+      }
 
       // 4. Update browser history state so browser Back/Forward works
       if (updateHistory && window.history && window.history.pushState) {
@@ -1873,7 +1875,7 @@ ${doc.excerpt}
           url.hash = 'home';
           window.history.pushState({ view: 'welcome' }, '', url.toString());
         } catch (e) {
-          console.warn('History pushState error:', e);
+          // Ignore history security or cross-origin restrictions in sandboxed iframes
         }
       }
     }
@@ -1898,7 +1900,9 @@ ${doc.excerpt}
       // Reset scroll position to top of results
       const mainEl = document.querySelector('main');
       if (mainEl) mainEl.scrollTop = 0;
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+        try { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch (_) { window.scrollTo(0, 0); }
+      }
 
       // Update browser history
       if (updateHistory && window.history && window.history.pushState) {
@@ -1907,7 +1911,7 @@ ${doc.excerpt}
           url.hash = 'results';
           window.history.pushState({ view: 'results' }, '', url.toString());
         } catch (e) {
-          console.warn('History pushState error:', e);
+          // Ignore history security or cross-origin restrictions in sandboxed iframes
         }
       }
 
@@ -3695,6 +3699,10 @@ ${doc.excerpt}
     }
 
     function buildOfficialDossierMarkdown(d) {
+      const loanMdTable = (d.visibleLoans || []).map(l =>
+        `| \`${l.id}\` | ${l.borrower} | ${l.district} | ${l.crop} | ${l.amount} | ${l.daysOverdue}d (${l.ndviDelta}) | **${l.status}** |`
+      ).join('\n');
+
       return `# REPUBLIC OF KENYA & EAST AFRICA REGIONAL DIRECTORATE
 ## MINISTRY OF ENVIRONMENT, CLIMATE CHANGE AND FORESTRY
 ### STATE DEPARTMENT FOR ENVIRONMENT & CLIMATE CHANGE
@@ -3799,8 +3807,7 @@ The season is governed by:
 
 | Facility ID | Borrower Cooperative | District | Commodity | Total Exposure | Delinquency / ΔNDVI | Audit Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-${d.visibleLoans.map(l => `| \`${l.id}\` | ${l.borrower} | ${l.district} | ${l.crop} | ${l.amount} | ${l.daysOverdue}d (${l.ndviDelta}) | **${l.status}** |`).join('
-')}
+${loanMdTable}
 
 - **Key Strategies:** Activate sovereign Catastrophe Bonds and Disaster Risk Financing instruments; enforce FCL Level 4 human governance sign-off for 60-day credit restructuring; disburse emergency low-interest liquidity credit lines to impacted MSMEs.
 
@@ -3851,7 +3858,7 @@ ${d.visibleLoans.map(l => `| \`${l.id}\` | ${l.borrower} | ${l.district} | ${l.c
 
 ## 7.0 OFFICIAL INSTITUTIONAL SIGN-OFF & CERTIFICATION
 
-```
+\`\`\`
    [OFFICIAL GOVERNMENT SEAL]                   [FCL BLOOMTECH CIS AUDIT STAMP]
   REPUBLIC OF KENYA - MET AUTHORITY           EAST AFRICA GREAT LAKES INTELLIGENCE
 
@@ -3862,7 +3869,7 @@ ${d.visibleLoans.map(l => `| \`${l.id}\` | ${l.borrower} | ${l.district} | ${l.c
   For Ag. DIRECTOR GENERAL                    Senior FCL Intelligence Analyst
   KENYA METEOROLOGICAL SERVICE AUTHORITY      FCL BLOOMTECH CENTRAL INTELLIGENCE
   Ref: KMD/FCST/05-2026/SO/03                 Level 4 Governance Gate Verified
-```
+\`\`\`
 **Immutable SHA-256 Audit Stamp:** \`8f4e2b91c0d7a3e59b2c8e11a4f0923d8c11e74b...verified\`  
 **Notice:** *This seasonal outlook must be integrated with 24-hour, 5-day, and monthly advisories issued by the Authority and FCL BLOOMTECH Sentinel-2 automated monitoring revisits.*
 
