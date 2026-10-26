@@ -12,6 +12,7 @@
 | Access Type | Description | Live Direct URL |
 | :--- | :--- | :--- |
 | **Universal Shareable Link** *(Open Access)* | **Open to anyone with the link.** Instant, frictionless access to all 6 intelligence domains, interactive satellite Leaflet map, NASA/Copernicus weather telemetry, and 19-page institutional reporting on any device. | **[Launch Web Application →](https://republicofbread.github.io/central-intelligence-system/)** |
+| **Dedicated Lakehouse Backend Portal** | **Organized administrative CMS & Lakehouse dashboard.** Live CRUD tables (`silver_districts`, `silver_loans`, `silver_documents`), 12 API health diagnostics, interactive SQL query runner, and REST API reference. | **[Launch Backend Portal →](https://republicofbread.github.io/central-intelligence-system/backend.html)** |
 | **Pre-Authenticated Recipient Link** | Direct access pre-authenticated for **Keren Obara (KO)** with Senior FCL Analyst governance sign-off privileges (`KO-2026-FCL`). | **[Launch as Keren Obara →](https://republicofbread.github.io/central-intelligence-system/?recipient=keren_obara&key=KO-2026-FCL)** |
 | **GitHub Repository** | Source code, SQLite Medallion Lakehouse schema, and Docker deployment assets under `republicofbread`. | **[github.com/republicofbread/central-intelligence-system](https://github.com/republicofbread/central-intelligence-system)** |
 
