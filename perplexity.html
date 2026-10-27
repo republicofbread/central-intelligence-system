@@ -3,372 +3,382 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FCL Intelligence — Perplexity AI Design</title>
+  <title>FCL BLOOMTECH — Intelligence that grows things</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=FK+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --fcl-blue: #007AFF;
+      --fcl-cyan: #06c3f4;
+      --pplx-dark: #191a1a;
+      --pplx-surface: #202222;
+      --pplx-card: #272828;
+      --pplx-border: #323434;
+      --pplx-teal: #20b2aa;
+      --apple-white: #FFFFFF;
+      --apple-grey: #8E8E93;
+    }
     body {
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
     }
     .font-mono {
       font-family: 'JetBrains Mono', monospace;
     }
-    /* Perplexity styling constants */
-    .bg-pplx-sidebar {
-      background-color: #191a1a;
+    /* Brand Flag Shape */
+    .fcl-flag {
+      clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
     }
-    .bg-pplx-main {
-      background-color: #202222;
+    /* Smooth Apple Glass Blur */
+    .apple-glass {
+      background: rgba(32, 34, 34, 0.78);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
-    .bg-pplx-card {
-      background-color: #2a2b2b;
+    .apple-glass-card {
+      background: rgba(39, 40, 40, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
     }
-    .border-pplx {
-      border-color: #343535;
+    .apple-pill-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    /* Citation badge */
-    .citation-chip {
-      background: rgba(32, 178, 170, 0.15);
-      color: #20b2aa;
-      border: 1px solid rgba(32, 178, 170, 0.3);
+    .apple-pill-btn:hover {
+      background: rgba(255, 255, 255, 0.10);
+      border-color: rgba(6, 195, 244, 0.4);
+      transform: translateY(-1px);
+    }
+    /* Interactive Citation Numbers */
+    .pplx-cite {
+      background: rgba(6, 195, 244, 0.12);
+      color: #06c3f4;
+      border: 1px solid rgba(6, 195, 244, 0.3);
       border-radius: 9999px;
-      padding: 1px 7px;
+      padding: 0px 6px;
       font-size: 11px;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       transition: all 0.15s ease;
+      vertical-align: baseline;
+      margin: 0 2px;
     }
-    .citation-chip:hover {
-      background: rgba(32, 178, 170, 0.28);
-      border-color: rgba(32, 178, 170, 0.6);
+    .pplx-cite:hover {
+      background: rgba(6, 195, 244, 0.25);
+      border-color: #06c3f4;
       transform: translateY(-1px);
     }
-    /* Custom scrollbar */
+    /* Custom Scrollbar */
     ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
     }
     ::-webkit-scrollbar-track {
       background: transparent;
     }
     ::-webkit-scrollbar-thumb {
-      background: #3a3b3b;
+      background: #363838;
       border-radius: 999px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #4a4b4b;
+      background: #4a4d4d;
     }
   </style>
 </head>
 <body class="h-full flex overflow-hidden bg-[#191a1a] text-[#e8e8e8]">
 
-  <!-- LEFT COMPACT SIDEBAR (Perplexity Style — Width: 64px or 220px expanded) -->
-  <aside class="w-16 md:w-60 bg-[#191a1a] border-r border-[#2e3030] flex flex-col justify-between shrink-0 select-none transition-all duration-200">
+  <!-- PERPLEXITY SLIM SIDEBAR (64px collapsed, 230px expanded on hover/desktop) -->
+  <aside class="w-16 md:w-56 bg-[#191a1a] border-r border-[#2d2e2e] flex flex-col justify-between shrink-0 select-none z-30 transition-all duration-200">
     <!-- Top Brand & New Thread -->
     <div class="p-3 space-y-4">
-      <!-- Perplexity-like Logo -->
-      <div class="flex items-center gap-3 px-1.5 py-1">
-        <div class="w-8 h-8 rounded-lg bg-[#20b2aa]/15 border border-[#20b2aa]/30 flex items-center justify-center text-[#20b2aa] font-bold text-sm shrink-0">
-          ✳
+      
+      <!-- FCL BLOOMTECH OFFICIAL BRAND LOGO (From Brand Guide) -->
+      <a href="javascript:void(0)" onclick="resetThread()" class="flex items-center gap-2.5 px-1 py-1 group">
+        <div class="h-7 px-2.5 bg-[#007AFF] text-white font-black text-xs tracking-tighter flex items-center justify-center rounded-l-md fcl-flag shadow-sm">
+          FCL
         </div>
-        <div class="hidden md:block truncate">
-          <div class="font-bold text-sm text-white tracking-tight">FCL Intelligence</div>
-          <div class="text-[10px] text-slate-400 font-mono">Sovereign Edition</div>
+        <div class="hidden md:flex flex-col">
+          <span class="font-black text-xs tracking-tight text-white group-hover:text-[#06c3f4] transition">BLOOMTECH</span>
+          <span class="text-[9px] font-mono text-slate-400 -mt-0.5">Central Intelligence</span>
         </div>
-      </div>
+      </a>
 
-      <!-- New Thread / Query Button -->
-      <button onclick="resetToWelcome()" class="w-full py-2 px-3 rounded-full bg-[#2a2b2b] hover:bg-[#343535] text-slate-200 text-xs font-semibold flex items-center justify-center md:justify-start gap-2.5 border border-[#3a3b3b] transition">
-        <span class="text-sm font-bold text-[#20b2aa]">+</span>
+      <!-- New Thread Button (Perplexity style) -->
+      <button onclick="resetThread()" class="w-full py-2 px-3 rounded-full bg-[#272828] hover:bg-[#323434] text-slate-200 text-xs font-semibold flex items-center justify-center md:justify-start gap-2.5 border border-[#363838] transition shadow-sm">
+        <span class="text-sm font-bold text-[#06c3f4]">+</span>
         <span class="hidden md:inline">New Thread</span>
       </button>
 
-      <!-- Nav Links -->
+      <!-- Clean Category Navigation -->
       <nav class="space-y-1">
-        <button onclick="setFocus('satellite')" class="w-full flex items-center gap-3 px-2.5 py-2 rounded-lg bg-[#2a2b2b] text-white text-xs font-medium border border-[#3a3b3b]/60">
+        <button onclick="switchCategory('satellite')" id="nav-satellite" class="w-full flex items-center gap-3 px-2.5 py-2 rounded-xl bg-[#272828] text-white text-xs font-medium border border-[#363838]/70">
           <span class="text-sm">🛰️</span>
-          <span class="hidden md:inline">Satellite & NDVI</span>
+          <span class="hidden md:inline truncate">Satellite & Vigor</span>
         </button>
-        <button onclick="setFocus('climate')" class="w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-[#242525] text-xs font-medium">
+        <button onclick="switchCategory('climate')" id="nav-climate" class="w-full flex items-center gap-3 px-2.5 py-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-[#202222] text-xs font-medium transition">
           <span class="text-sm">🌍</span>
-          <span class="hidden md:inline">Climate & Rain</span>
+          <span class="hidden md:inline truncate">Climate & Rainfall</span>
         </button>
-        <button onclick="setFocus('soil')" class="w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-[#242525] text-xs font-medium">
+        <button onclick="switchCategory('soil')" id="nav-soil" class="w-full flex items-center gap-3 px-2.5 py-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-[#202222] text-xs font-medium transition">
           <span class="text-sm">🧪</span>
-          <span class="hidden md:inline">Soil & Agronomy</span>
+          <span class="hidden md:inline truncate">Soil Pedology</span>
         </button>
-        <button onclick="setFocus('loans')" class="w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-[#242525] text-xs font-medium">
+        <button onclick="switchCategory('loans')" id="nav-loans" class="w-full flex items-center gap-3 px-2.5 py-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-[#202222] text-xs font-medium transition">
           <span class="text-sm">💰</span>
-          <span class="hidden md:inline">Credit & Finance</span>
+          <span class="hidden md:inline truncate">Credit Portfolios</span>
         </button>
-        <button onclick="setFocus('documents')" class="w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-[#242525] text-xs font-medium">
+        <button onclick="switchCategory('documents')" id="nav-documents" class="w-full flex items-center gap-3 px-2.5 py-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-[#202222] text-xs font-medium transition">
           <span class="text-sm">📄</span>
-          <span class="hidden md:inline">Audit & Docs</span>
+          <span class="hidden md:inline truncate">Policy Conflict Audit</span>
         </button>
       </nav>
 
-      <!-- Quick Recent Threads -->
-      <div class="hidden md:block pt-3 border-t border-[#2e3030] space-y-1">
-        <div class="px-2 text-[10px] font-mono text-slate-500 uppercase tracking-wider font-bold">Recent Inquiries</div>
-        <button onclick="submitPreset('Kiambu drought impact last 90 days')" class="w-full text-left px-2 py-1.5 rounded text-xs text-slate-400 hover:text-slate-200 hover:bg-[#242525] truncate">
-          • Kiambu drought & wilting
+      <!-- Monitored Hotspot Regions (Quick Pills) -->
+      <div class="hidden md:block pt-3 border-t border-[#2d2e2e] space-y-1">
+        <div class="px-2 text-[10px] font-mono text-slate-500 uppercase tracking-wider font-bold">Monitored Regions</div>
+        <button onclick="submitPrompt('Assess vegetation stress and credit shock in Kiambu District (Kenya)')" class="w-full text-left px-2 py-1.5 rounded text-xs text-slate-400 hover:text-white hover:bg-[#202222] truncate transition">
+          🇰🇪 Kiambu Agro-Highlands
         </button>
-        <button onclick="submitPreset('Northern region overdue loans')" class="w-full text-left px-2 py-1.5 rounded text-xs text-slate-400 hover:text-slate-200 hover:bg-[#242525] truncate">
-          • Northern Uganda loans
+        <button onclick="submitPrompt('Overdue loans and agricultural drought in Northern Uganda (Gulu, Lira, Kitgum)')" class="w-full text-left px-2 py-1.5 rounded text-xs text-slate-400 hover:text-white hover:bg-[#202222] truncate transition">
+          🇺🇬 Northern Corridor
         </button>
-        <button onclick="submitPreset('Kisumu Nyando flood risk')" class="w-full text-left px-2 py-1.5 rounded text-xs text-slate-400 hover:text-slate-200 hover:bg-[#242525] truncate">
-          • Kisumu river inundation
+        <button onclick="submitPrompt('Check river flood inundation and rice basin alert in Kisumu Nyando')" class="w-full text-left px-2 py-1.5 rounded text-xs text-slate-400 hover:text-white hover:bg-[#202222] truncate transition">
+          🇰🇪 Kisumu / Nyando Basin
+        </button>
+        <button onclick="submitPrompt('Analyze wheat yields and soil moisture in Rift Valley Nakuru')" class="w-full text-left px-2 py-1.5 rounded text-xs text-slate-400 hover:text-white hover:bg-[#202222] truncate transition">
+          🇰🇪 Nakuru / Njoro Belt
         </button>
       </div>
+
     </div>
 
-    <!-- Bottom User Profile (Perplexity style) -->
-    <div class="p-3 border-t border-[#2e3030]">
+    <!-- Bottom Operator Account Profile (Perplexity style) -->
+    <div class="p-3 border-t border-[#2d2e2e]">
       <div class="flex items-center gap-2.5">
-        <div class="w-7 h-7 rounded-full bg-[#20b2aa] text-[#191a1a] font-bold text-xs flex items-center justify-center shrink-0">
+        <div class="w-7 h-7 rounded-full bg-[#007AFF] text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">
           KO
         </div>
         <div class="hidden md:block truncate">
           <div class="text-xs font-bold text-slate-200 truncate">Keren Obara</div>
-          <div class="text-[10px] text-[#20b2aa] font-mono">Level 4 Gate</div>
+          <div class="text-[10px] text-[#06c3f4] font-mono">Level 4 Gate Signer</div>
         </div>
       </div>
     </div>
   </aside>
 
-  <!-- CENTER MAIN CONVERSATIONAL CANVAS -->
+  <!-- CENTER CONVERSATIONAL STREAM (Perplexity Clean Single Column) -->
   <main class="flex-1 flex flex-col h-full overflow-hidden bg-[#202222] relative">
 
-    <!-- TOP HEADER -->
-    <header class="h-14 border-b border-[#2e3030] flex items-center justify-between px-6 shrink-0 bg-[#202222]/90 backdrop-blur z-20">
-      <div class="flex items-center gap-3">
-        <span class="text-xs font-mono font-medium text-slate-400">Model:</span>
-        <span class="px-2.5 py-1 rounded-full bg-[#2a2b2b] text-slate-200 text-xs font-semibold border border-[#3a3b3b] flex items-center gap-1.5">
-          <span class="w-1.5 h-1.5 rounded-full bg-[#20b2aa]"></span>
-          <span>FCL Agentic Substrate (Gemini 2.5 + TerraMind)</span>
-        </span>
+    <!-- SUBTLE TOP BAR -->
+    <header class="h-13 py-2 px-6 border-b border-[#2d2e2e] flex items-center justify-between shrink-0 bg-[#202222]/90 backdrop-blur z-10">
+      <div class="flex items-center gap-2 text-xs text-slate-400 font-mono">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span class="text-slate-200 font-semibold">FCL Sovereign Substrate</span>
+        <span class="text-slate-500">•</span>
+        <span>Isolated: <strong class="text-slate-300">fcl_internal</strong></span>
       </div>
       <div class="flex items-center gap-2">
-        <span class="text-xs font-mono text-slate-400 hidden sm:inline">20 Free APIs Connected</span>
-        <button onclick="window.print()" class="px-3 py-1 rounded-lg bg-[#2a2b2b] hover:bg-[#343535] text-slate-300 text-xs border border-[#3a3b3b] transition">
-          Share Thread
+        <button onclick="window.print()" class="px-2.5 py-1 rounded-lg bg-[#272828] hover:bg-[#323434] text-slate-300 text-xs font-medium border border-[#363838] transition">
+          Share
+        </button>
+        <button onclick="openModal('lakehouse-drawer')" class="px-2.5 py-1 rounded-lg bg-[#272828] hover:bg-[#323434] text-[#06c3f4] text-xs font-medium border border-[#363838] transition">
+          Lakehouse SQL
         </button>
       </div>
     </header>
 
-    <!-- SCROLLABLE ANSWER STREAM -->
-    <div id="thread-scroll" class="flex-1 overflow-y-auto px-4 md:px-16 lg:px-28 py-8 space-y-8 max-w-4xl mx-auto w-full">
+    <!-- MAIN SCROLLABLE THREAD (Apple Clean Space) -->
+    <div id="thread-container" class="flex-1 overflow-y-auto px-5 md:px-14 lg:px-24 py-8 space-y-7 max-w-3xl mx-auto w-full">
 
-      <!-- USER QUESTION CARD -->
-      <div class="space-y-2">
-        <h1 id="query-heading" class="text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">
+      <!-- QUESTION HEADER -->
+      <div class="space-y-1.5">
+        <h1 id="thread-title" class="text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">
           What changed in Kiambu District in the last 90 days?
         </h1>
-        <div class="flex items-center gap-3 text-xs text-slate-400 font-mono">
+        <div class="flex items-center gap-2 text-xs text-slate-400 font-mono">
           <span>Target: Kiambu Agro-Highlands (Kenya)</span>
           <span>•</span>
-          <span>Observation Window: 22 Jul – 19 Oct 2026</span>
+          <span>Observation: 22 Jul – 19 Oct 2026</span>
         </div>
       </div>
 
-      <!-- SOURCES CAROUSEL (Perplexity Style — Horizontal Pill Row) -->
-      <div class="space-y-2.5">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 font-mono">
-            <span>📚</span><span>Sources Cited (6 Free Feeds)</span>
-          </span>
-          <span class="text-xs text-[#20b2aa] font-mono cursor-pointer hover:underline" onclick="toggleSourcesDrawer()">
-            View All 8 Lines →
-          </span>
+      <!-- APPLE-DESIGN SUMMARY BUTTONS (NO CLUTTER) -->
+      <!-- Instead of 8 big cards crowding the screen, 2 clean interactive pills -->
+      <div class="flex flex-wrap items-center gap-2.5 pt-1">
+        
+        <!-- BUTTON 1: SATELLITE DATA SOURCES PILL -->
+        <button onclick="openModal('satellite-sources-drawer')" class="apple-pill-btn px-3 py-1.5 rounded-full text-xs font-medium text-slate-200 flex items-center gap-2 group">
+          <span class="text-[#06c3f4]">🛰️</span>
+          <span><strong>Satellite Intelligence</strong> (Copernicus S2 & S1 SAR, Planet 4.7m)</span>
+          <span class="px-1.5 py-0.2 rounded-full bg-white/10 text-[10px] font-mono text-slate-300">3 Feeds</span>
+          <span class="text-slate-500 group-hover:text-white transition">→</span>
+        </button>
+
+        <!-- BUTTON 2: SOURCE DATASETS PILL -->
+        <button onclick="openModal('lakehouse-sources-drawer')" class="apple-pill-btn px-3 py-1.5 rounded-full text-xs font-medium text-slate-200 flex items-center gap-2 group">
+          <span class="text-emerald-400">📊</span>
+          <span><strong>Lakehouse Data Feeds</strong> (CHIRPS, ISRIC Soil, WaPOR, WorldPop)</span>
+          <span class="px-1.5 py-0.2 rounded-full bg-white/10 text-[10px] font-mono text-slate-300">17 Feeds</span>
+          <span class="text-slate-500 group-hover:text-white transition">→</span>
+        </button>
+
+        <!-- BUTTON 3: INTERACTIVE MAP VIEWER BUTTON -->
+        <button onclick="toggleMapDrawer()" id="btn-toggle-map" class="apple-pill-btn px-3 py-1.5 rounded-full text-xs font-medium text-slate-200 flex items-center gap-2 border-[#007AFF]/40 bg-[#007AFF]/10 hover:bg-[#007AFF]/20 text-sky-200 transition">
+          <span>🗺️</span>
+          <span id="map-btn-label">Open Satellite Map Canvas</span>
+          <span class="text-[10px] font-mono bg-sky-500/20 text-sky-300 px-1.5 rounded">10m GSD</span>
+        </button>
+
+      </div>
+
+      <!-- COLLAPSIBLE INTERACTIVE SATELLITE MAP DRAWER (Apple Smooth Container) -->
+      <div id="map-drawer" class="hidden rounded-2xl border border-[#343535] bg-[#252727] overflow-hidden shadow-2xl transition-all duration-300">
+        <div class="p-3 border-b border-[#343535] flex items-center justify-between bg-[#2a2b2b]">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+            <span class="font-bold text-xs text-white">Kiambu Agro-Highlands — Multi-Spectral Vigor Heatmap</span>
+          </div>
+          <button onclick="toggleMapDrawer()" class="text-xs text-slate-400 hover:text-white font-mono">
+            Close Map ✕
+          </button>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          <!-- Source 1 -->
-          <div onclick="openSourceModal('src-copernicus')" class="p-2.5 rounded-xl bg-[#2a2b2b] hover:bg-[#343535] border border-[#3a3b3b] cursor-pointer transition space-y-1">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] font-mono text-[#20b2aa] font-bold">Source 1</span>
-              <span class="text-[10px] text-slate-400">Copernicus</span>
-            </div>
-            <div class="text-xs font-semibold text-slate-100 truncate">Sentinel-2 L2A Optical</div>
-            <div class="text-[10px] text-slate-400 truncate">S2B_20261019_T37MBU</div>
-          </div>
+        <!-- Leaflet Map Container -->
+        <div id="inline-map" class="h-64 w-full bg-[#1b1c1c]"></div>
 
-          <!-- Source 2 -->
-          <div onclick="openSourceModal('src-nasapower')" class="p-2.5 rounded-xl bg-[#2a2b2b] hover:bg-[#343535] border border-[#3a3b3b] cursor-pointer transition space-y-1">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] font-mono text-[#20b2aa] font-bold">Source 2</span>
-              <span class="text-[10px] text-slate-400">NASA Open</span>
-            </div>
-            <div class="text-xs font-semibold text-slate-100 truncate">NASA POWER Daily</div>
-            <div class="text-[10px] text-slate-400 truncate">Agroclimatology v2.4</div>
-          </div>
-
-          <!-- Source 6 -->
-          <div onclick="openSourceModal('src-soilgrids')" class="p-2.5 rounded-xl bg-[#2a2b2b] hover:bg-[#343535] border border-[#3a3b3b] cursor-pointer transition space-y-1">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] font-mono text-[#20b2aa] font-bold">Source 6</span>
-              <span class="text-[10px] text-slate-400">ISRIC Soil</span>
-            </div>
-            <div class="text-xs font-semibold text-slate-100 truncate">ISRIC SoilGrids 250m</div>
-            <div class="text-[10px] text-slate-400 truncate">pH 5.6 • Clay 52%</div>
-          </div>
-
-          <!-- Source 5 -->
-          <div onclick="openSourceModal('src-survey')" class="p-2.5 rounded-xl bg-[#2a2b2b] hover:bg-[#343535] border border-[#3a3b3b] cursor-pointer transition space-y-1">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] font-mono text-amber-400 font-bold">Source 5</span>
-              <span class="text-[10px] text-slate-400">FCL Internal</span>
-            </div>
-            <div class="text-xs font-semibold text-slate-100 truncate">October Survey (p.29)</div>
-            <div class="text-[10px] text-amber-400 truncate">⚠️ Policy Conflict</div>
-          </div>
+        <!-- Temporal Slider Bar Scrub -->
+        <div class="p-3 bg-[#222424] border-t border-[#343535] flex items-center justify-between gap-4 text-xs font-mono">
+          <span class="text-slate-400 shrink-0">Jul 2026 (0.68)</span>
+          <input 
+            type="range" 
+            min="0" 
+            max="100" 
+            value="50" 
+            oninput="handleMapScrub(this.value)"
+            class="w-full accent-[#007AFF] cursor-pointer h-1.5 bg-[#343535] rounded"
+          />
+          <span class="text-rose-400 font-bold shrink-0">Oct 2026 (0.49)</span>
         </div>
       </div>
 
-      <!-- ANSWER BODY (Clean Typography with Inline Citation Chips) -->
-      <div class="space-y-5 text-slate-200 text-sm md:text-base leading-relaxed">
+      <!-- PERPLEXITY-STYLE SYNTHESIZED ANSWER (Apple Typography) -->
+      <div class="space-y-4 text-slate-200 text-sm md:text-[15px] leading-relaxed">
         
         <p>
-          Over the past 90 days (22 July – 19 October 2026), multi-temporal radiometric analysis across 
-          <strong class="text-white">Kiambu District</strong> establishes a severe agricultural moisture shock. 
-          Copernicus <strong class="text-white">Sentinel-2 L2A optical scenes</strong> record a vegetation index drop of 
-          <strong class="text-rose-400 font-semibold">ΔNDVI = -0.19</strong> (declining from 0.68 down to 0.49) 
-          <span class="citation-chip" onclick="openSourceModal('src-copernicus')">[1]</span>. 
-          Ground stations and NASA POWER agroclimatology confirm a 
-          <strong class="text-rose-400 font-semibold">-48.4% rainfall deficit</strong> (112.4 mm observed vs the 218.0 mm 10-year NOAA normal) 
-          <span class="citation-chip" onclick="openSourceModal('src-nasapower')">[2]</span>.
+          Over the past 90 days, multi-temporal analysis across <strong class="text-white">Kiambu District</strong> 
+          confirms an acute agricultural drought shock. Multi-spectral radiometry from Copernicus 
+          <strong class="text-white">Sentinel-2 L2A optical sensors</strong> reveals an aggregate vegetation decline of 
+          <strong class="text-rose-400 font-semibold">ΔNDVI = -0.19</strong> (from 0.68 down to 0.49) 
+          <span class="pplx-cite" onclick="openModal('satellite-sources-drawer')">1</span>. 
+          Cross-validation against ground synoptic stations (<code class="font-mono text-xs text-sky-300">HKJK</code>) and CHIRPS 40-year climatology 
+          establishes a <strong class="text-rose-400 font-semibold">-48.4% rainfall anomaly</strong> 
+          (112.4 mm observed versus the 218.0 mm 10-year NOAA baseline) 
+          <span class="pplx-cite" onclick="openModal('lakehouse-sources-drawer')">2</span>.
         </p>
-
-        <!-- CLEAN ACCORDION CARD: SATELLITE MAP & COMPARISON SLIDER -->
-        <div class="rounded-2xl border border-[#343535] bg-[#252727] overflow-hidden shadow-lg">
-          <div class="p-3.5 border-b border-[#343535] flex items-center justify-between bg-[#2a2b2b]">
-            <div class="flex items-center gap-2">
-              <span class="text-sm">🗺️</span>
-              <span class="font-bold text-xs text-white">Interactive Satellite Vigor Map & Temporal Comparison</span>
-            </div>
-            <span class="text-[11px] font-mono text-slate-400">10m Ground Resolution</span>
-          </div>
-
-          <!-- Leaflet Map Container -->
-          <div id="pplx-map" class="h-64 w-full bg-[#1b1c1c]"></div>
-
-          <!-- Minimalist Bottom Temporal Slider Scrub -->
-          <div class="p-3 bg-[#242525] border-t border-[#343535] flex items-center gap-4 text-xs font-mono">
-            <span class="text-slate-400 shrink-0">Jul 2026 (0.68)</span>
-            <input 
-              type="range" 
-              min="0" 
-              max="100" 
-              value="50" 
-              oninput="handleScrub(this.value)"
-              class="w-full accent-[#20b2aa] cursor-pointer h-1.5 bg-[#343535] rounded"
-            />
-            <span class="text-rose-400 font-bold shrink-0">Oct 2026 (0.49)</span>
-          </div>
-        </div>
 
         <p>
-          Topsoil pedology indexed from the <strong class="text-white">ISRIC SoilGrids 250m Atlas</strong> indicates that Kiambu’s 
-          farmlands sit atop <strong class="text-white">Humic Nitisols</strong> (pH 5.6, 52% clay fraction) 
-          <span class="citation-chip" onclick="openSourceModal('src-soilgrids')">[6]</span>. 
-          While these heavy clays possess high moisture retention, root-zone saturation has plummeted to 
-          <strong class="text-amber-400">28.5%</strong>, causing irreversible wilting in unshaded maize and tea crops.
+          Topsoil pedology from the <strong class="text-white">ISRIC SoilGrids 250m Atlas</strong> shows the zone is characterized by 
+          <strong class="text-white">Humic Nitisols</strong> (pH 5.6, 52% clay fraction, 24.2 g/kg organic carbon) 
+          <span class="pplx-cite" onclick="openModal('lakehouse-sources-drawer')">6</span>. 
+          While these volcanic clays possess high theoretical water retention, root-zone field saturation has dropped to 
+          <strong class="text-amber-400">28.5%</strong>, inducing transpirational shutdown and canopy wilting across smallholder coffee and maize clusters.
         </p>
 
-        <!-- HIGH-PRIORITY CALLOUT: POLICY CONFLICT -->
-        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
-          <span class="text-lg text-amber-400">⚠️</span>
+        <!-- APPLE ACCENT CALLOUT: POLICY THRESHOLD CONFLICT -->
+        <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
+          <span class="text-base text-amber-400 mt-0.5">⚠️</span>
           <div class="space-y-1">
             <div class="font-bold text-xs uppercase tracking-wider text-amber-300 font-mono">
-              Cross-Document Conflict Detected [Source 5]
+              Policy Conflict Discovered [DOC-2026-OCT-01 vs Policy v4.0]
             </div>
-            <div class="text-xs text-slate-300 leading-normal">
-              Field inspections across 412 smallholder plots in the <strong class="text-white">October 2026 Field Survey Report</strong> (p. 29) 
-              prove that maize crops undergo permanent wilting at <strong class="text-white">NDVI ≤ 0.45</strong>. 
-              However, the <strong class="text-white">FCL Parametric Policy v4.0</strong> currently requires an automated cut-off of 
-              <strong class="text-white">NDVI ≤ 0.35</strong>, leaving 3,430 cooperative members ineligible for parametric insurance payouts without administrative override.
-            </div>
+            <p class="text-xs text-slate-300 leading-normal">
+              Agronomy audit across 412 verified farm plots in the <strong class="text-white">October Field Survey Report (p. 29)</strong> 
+              proves irreversible crop wilting begins at <strong class="text-white">NDVI ≤ 0.45</strong>. 
+              However, <strong class="text-white">FCL Policy v4.0 Section 4.2</strong> sets the automatic parametric insurance trigger at 
+              <strong class="text-white">NDVI ≤ 0.35</strong>, leaving 3,430 cooperative members without automatic claim compensation.
+            </p>
           </div>
         </div>
 
-        <!-- 3-ROW CLEAN METRIC CARDS -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
-          <div class="p-3.5 rounded-xl bg-[#2a2b2b] border border-[#343535]">
-            <div class="text-xs font-mono text-slate-400">CREDIT EXPOSURE AT RISK</div>
-            <div class="text-xl font-bold font-mono text-white mt-1">$56,700 <span class="text-xs text-rose-400 font-normal">(4 Loans)</span></div>
-            <div class="text-[11px] text-slate-400 mt-1">Recommended: 90-day maturity restructuring</div>
+        <!-- 3 COMPACT STAT PILLS (Apple Minimal Hardware Card Style) -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+          <div class="p-3 rounded-xl bg-[#262727] border border-[#343535]">
+            <div class="text-[11px] font-mono text-slate-400 uppercase">Exposure at Risk</div>
+            <div class="text-lg font-bold font-mono text-white mt-0.5">$56,700 <span class="text-xs text-rose-400 font-normal">(4 Loans)</span></div>
+            <div class="text-[10px] text-slate-400 mt-0.5">AgriScore Risk: 88/100</div>
           </div>
-
-          <div class="p-3.5 rounded-xl bg-[#2a2b2b] border border-[#343535]">
-            <div class="text-xs font-mono text-slate-400">WATER DEFICIT (FAO WaPOR)</div>
-            <div class="text-xl font-bold font-mono text-amber-400 mt-1">38.4% Deficit</div>
-            <div class="text-[11px] text-slate-400 mt-1">Actual Evapotranspiration: 1.82 mm/day</div>
+          <div class="p-3 rounded-xl bg-[#262727] border border-[#343535]">
+            <div class="text-[11px] font-mono text-slate-400 uppercase">Water Deficit (WaPOR)</div>
+            <div class="text-lg font-bold font-mono text-amber-400 mt-0.5">38.4% Deficit</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">AET: 1.82 mm/day</div>
           </div>
-
-          <div class="p-3.5 rounded-xl bg-[#2a2b2b] border border-[#343535]">
-            <div class="text-xs font-mono text-slate-400">ACTIVE FIRE HOTSPOTS</div>
-            <div class="text-xl font-bold font-mono text-emerald-400 mt-1">4 Detections</div>
-            <div class="text-[11px] text-slate-400 mt-1">NASA FIRMS (VIIRS 375m) stubble alert</div>
+          <div class="p-3 rounded-xl bg-[#262727] border border-[#343535]">
+            <div class="text-[11px] font-mono text-slate-400 uppercase">Smallholder Cohort</div>
+            <div class="text-lg font-bold font-mono text-emerald-400 mt-0.5">184,200 Farmers</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">42.1% Female-Headed</div>
           </div>
         </div>
 
       </div>
 
-      <!-- ACTION BUTTONS (Level 4 Gate Sign-off) -->
-      <div class="pt-4 border-t border-[#2e3030] flex items-center justify-between">
+      <!-- GOVERNANCE APPROVAL BAR (Level 4 Gate Sign-off) -->
+      <div class="pt-3 border-t border-[#2e3030] flex flex-wrap items-center justify-between gap-3">
         <div class="flex items-center gap-2">
-          <button onclick="alert('Proposal signed by Keren Obara. Restructuring instructions dispatched to core ERP.')" class="px-4 py-2 rounded-xl bg-[#20b2aa] hover:bg-[#1ca39b] text-[#141515] font-bold text-xs flex items-center gap-2 shadow-md transition">
-            <span>🛡️</span><span>Approve 90-Day Loan Restructuring (Level 4 Gate)</span>
+          <button onclick="approveRestructuring()" class="px-4 py-2 rounded-xl bg-[#007AFF] hover:bg-[#006be0] text-white font-bold text-xs flex items-center gap-2 shadow-sm transition">
+            <span>🛡️</span><span>Sign-Off 90-Day Loan Restructuring (Level 4 Gate)</span>
           </button>
-          <button onclick="toggleSqlModal()" class="px-3 py-2 rounded-xl bg-[#2a2b2b] hover:bg-[#343535] text-slate-300 text-xs font-mono border border-[#3a3b3b] transition">
-            View SQL Lineage
+          <button onclick="openModal('lakehouse-drawer')" class="px-3 py-2 rounded-xl bg-[#272828] hover:bg-[#323434] text-slate-300 text-xs font-mono border border-[#363838] transition">
+            Inspect Loans Table
           </button>
         </div>
-        <span class="text-[11px] font-mono text-slate-500">Execution time: 218ms • 0 API errors</span>
+        <span class="text-[11px] font-mono text-slate-500">Latency: 218ms • 0 API errors • SHA-256 Verified</span>
       </div>
 
-      <div class="h-20"></div><!-- Padding for floating bottom input -->
+      <!-- Spacer for bottom floating input -->
+      <div class="h-24"></div>
     </div>
 
     <!-- FLOATING PERPLEXITY-STYLE BOTTOM QUERY BAR -->
-    <div class="absolute bottom-4 left-0 right-0 max-w-3xl mx-auto px-4 z-30">
-      <div class="bg-[#191a1a]/95 backdrop-blur-md rounded-2xl border border-[#3a3b3b] shadow-2xl p-2.5 space-y-2">
+    <div class="absolute bottom-5 left-0 right-0 max-w-3xl mx-auto px-4 z-20">
+      <div class="bg-[#191a1a]/95 backdrop-blur-xl rounded-2xl border border-[#363838] shadow-2xl p-2.5 space-y-2">
         <!-- Input Row -->
         <div class="flex items-center gap-2 px-2">
           <span class="text-slate-400 text-sm">💬</span>
           <input 
-            id="pplx-input"
+            id="user-input"
             type="text" 
-            placeholder="Ask a follow-up question, analyze a loan, or inspect a district..."
+            placeholder="Ask a follow-up question or analyze another district..."
             class="w-full bg-transparent text-sm text-slate-100 placeholder-slate-500 focus:outline-none"
-            onkeydown="if(event.key === 'Enter'){ handleUserSubmit(); }"
+            onkeydown="if(event.key === 'Enter'){ handleSend(); }"
           />
-          <button onclick="handleUserSubmit()" class="w-8 h-8 rounded-xl bg-[#20b2aa] hover:bg-[#1ca39b] text-[#141515] font-bold flex items-center justify-center shrink-0 transition">
+          <button onclick="handleSend()" class="w-8 h-8 rounded-xl bg-[#007AFF] hover:bg-[#006be0] text-white font-bold flex items-center justify-center shrink-0 transition shadow-sm">
             ↑
           </button>
         </div>
 
-        <!-- Quick Focus Filter Chips -->
-        <div class="flex items-center gap-1.5 pt-1 border-t border-[#2a2b2b] text-[11px] overflow-x-auto text-slate-400">
+        <!-- Focus Filter Chips (Perplexity Style) -->
+        <div class="flex items-center gap-1.5 pt-1 border-t border-[#272828] text-[11px] overflow-x-auto text-slate-400">
           <span class="text-slate-500 font-mono text-[10px] uppercase font-bold shrink-0">Focus:</span>
-          <button onclick="submitPreset('Check active fires near Gulu and Kitgum')" class="px-2 py-0.5 rounded-full bg-[#2a2b2b] hover:bg-[#343535] text-slate-300 border border-[#3a3b3b] shrink-0">
-            🔥 Active Fires
+          <button onclick="submitPrompt('Check active fires and thermal anomalies near Kitgum and Gulu')" class="px-2.5 py-0.5 rounded-full bg-[#272828] hover:bg-[#323434] text-slate-300 border border-[#363838] shrink-0 transition">
+            🔥 FIRMS Fires
           </button>
-          <button onclick="submitPreset('Analyze soil pH and clay in Nakuru Basin')" class="px-2 py-0.5 rounded-full bg-[#2a2b2b] hover:bg-[#343535] text-slate-300 border border-[#3a3b3b] shrink-0">
+          <button onclick="submitPrompt('Analyze soil pH and clay content in Rift Valley Nakuru')" class="px-2.5 py-0.5 rounded-full bg-[#272828] hover:bg-[#323434] text-slate-300 border border-[#363838] shrink-0 transition">
             🧪 Soil Profile
           </button>
-          <button onclick="submitPreset('Check river discharge in Kisumu Nyando')" class="px-2 py-0.5 rounded-full bg-[#2a2b2b] hover:bg-[#343535] text-slate-300 border border-[#3a3b3b] shrink-0">
-            🌊 Flood Risk
+          <button onclick="submitPrompt('Check river flood inundation and rice basin alert in Kisumu Nyando')" class="px-2.5 py-0.5 rounded-full bg-[#272828] hover:bg-[#323434] text-slate-300 border border-[#363838] shrink-0 transition">
+            🌊 GloFAS Flood
           </button>
-          <button onclick="submitPreset('Show female smallholder demographics in Uganda')" class="px-2 py-0.5 rounded-full bg-[#2a2b2b] hover:bg-[#343535] text-slate-300 border border-[#3a3b3b] shrink-0">
-            👩 Smallholders
+          <button onclick="submitPrompt('Show smallholder demographics and female-headed farm metrics in Uganda')" class="px-2.5 py-0.5 rounded-full bg-[#272828] hover:bg-[#323434] text-slate-300 border border-[#363838] shrink-0 transition">
+            👩 WorldPop Equity
           </button>
         </div>
       </div>
@@ -376,39 +386,184 @@
 
   </main>
 
-  <!-- POPUP SOURCE CITATION MODAL -->
-  <div id="source-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-[#242525] border border-[#3a3b3b] rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-[#343535] pb-3">
-        <span id="modal-badge" class="px-2 py-0.5 rounded-full bg-[#20b2aa]/20 text-[#20b2aa] font-mono text-xs font-bold">
-          Source 1
-        </span>
-        <button onclick="closeSourceModal()" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
+  <!-- MODAL 1: SATELLITE SOURCES DRAWER (Opened via single interactive button) -->
+  <div id="satellite-sources-drawer" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-[#242525] border border-[#363838] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-[#363838] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">🛰️</span>
+          <h3 class="font-bold text-base text-white">Satellite Earth Observation Feeds</h3>
+        </div>
+        <button onclick="closeModal('satellite-sources-drawer')" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
       </div>
-      <div>
-        <h3 id="modal-title" class="font-bold text-base text-white">Copernicus Sentinel-2 L2A</h3>
-        <p id="modal-sub" class="text-xs text-slate-400 mt-1">Element84 STAC v1.1.0 • 10m Ground Resolution</p>
+
+      <div class="space-y-3 text-xs">
+        <!-- Feed 1 -->
+        <div class="p-3 rounded-xl bg-[#1d1f1f] border border-[#343535] space-y-1">
+          <div class="flex items-center justify-between font-bold text-white">
+            <span>Copernicus Sentinel-2 L2A (Element84 STAC v1)</span>
+            <span class="text-emerald-400 font-mono">10m Optical</span>
+          </div>
+          <div class="text-slate-400">Scene: <code class="text-sky-300">S2B_MSIL2A_20261019T074619_T37MBU</code> • Cloud: 8.4%</div>
+          <div class="text-[11px] font-mono text-slate-500">Zonal Mean NDVI = 0.49 (ΔNDVI = -0.19) • SHA-256 Verified</div>
+        </div>
+
+        <!-- Feed 2 -->
+        <div class="p-3 rounded-xl bg-[#1d1f1f] border border-[#343535] space-y-1">
+          <div class="flex items-center justify-between font-bold text-white">
+            <span>Copernicus Sentinel-1 C-Band SAR</span>
+            <span class="text-sky-400 font-mono">Radar Inundation</span>
+          </div>
+          <div class="text-slate-400">All-weather cloud penetration • VV/VH backscatter polarization</div>
+          <div class="text-[11px] font-mono text-slate-500">Zero standing water masks detected across Kiambu polygons</div>
+        </div>
+
+        <!-- Feed 3 -->
+        <div class="p-3 rounded-xl bg-[#1d1f1f] border border-[#343535] space-y-1">
+          <div class="flex items-center justify-between font-bold text-white">
+            <span>Planet Labs NICFI Tropical Basemap</span>
+            <span class="text-purple-400 font-mono">4.7m High-Res</span>
+          </div>
+          <div class="text-slate-400">Norway NICFI Public Open Access • Monthly analytic composite</div>
+        </div>
       </div>
-      <div id="modal-body" class="p-3 rounded-xl bg-[#191a1a] text-xs font-mono text-slate-300 space-y-1.5 border border-[#343535]">
-        <div>• Acquisition: 2026-10-19T07:46Z</div>
-        <div>• Processing Lag: 6h 26m</div>
-        <div>• Cloud Coverage: 8.4%</div>
-        <div>• SHA-256: 8f3a812e9b04...</div>
+
+      <div class="text-right pt-2 border-t border-[#343535]">
+        <button onclick="closeModal('satellite-sources-drawer')" class="px-4 py-1.5 rounded-lg bg-[#323434] hover:bg-[#3c3e3e] text-slate-200 text-xs font-medium">
+          Close Inspector
+        </button>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: LAKEHOUSE DATASETS DRAWER (Opened via single interactive button) -->
+  <div id="lakehouse-sources-drawer" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-[#242525] border border-[#363838] rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-[#363838] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">📊</span>
+          <h3 class="font-bold text-base text-white">Authoritative Datasets & Open Feeds</h3>
+        </div>
+        <button onclick="closeModal('lakehouse-sources-drawer')" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
+      </div>
+
+      <div class="space-y-2.5 text-xs">
+        <div class="p-2.5 rounded-xl bg-[#1d1f1f] border border-[#343535]">
+          <div class="font-bold text-white flex justify-between">
+            <span>CHIRPS 40-Yr African Climatology</span>
+            <span class="text-amber-400 font-mono">SPI-3: -1.48</span>
+          </div>
+          <div class="text-slate-400 mt-0.5">Observed: 112.4mm vs 218.0mm Median • UCSB FEWS NET</div>
+        </div>
+
+        <div class="p-2.5 rounded-xl bg-[#1d1f1f] border border-[#343535]">
+          <div class="font-bold text-white flex justify-between">
+            <span>ISRIC SoilGrids 250m Global Atlas</span>
+            <span class="text-sky-400 font-mono">pH 5.6 • Clay 52%</span>
+          </div>
+          <div class="text-slate-400 mt-0.5">Humic Nitisols (Red volcanic clay) • Organic Carbon: 24.2 g/kg</div>
+        </div>
+
+        <div class="p-2.5 rounded-xl bg-[#1d1f1f] border border-[#343535]">
+          <div class="font-bold text-white flex justify-between">
+            <span>FAO WaPOR 3.0 Water Accounting</span>
+            <span class="text-rose-400 font-mono">Deficit: 38.4%</span>
+          </div>
+          <div class="text-slate-400 mt-0.5">Actual Evapotranspiration: 1.82 mm/day • UN FAO Open API</div>
+        </div>
+
+        <div class="p-2.5 rounded-xl bg-[#1d1f1f] border border-[#343535]">
+          <div class="font-bold text-white flex justify-between">
+            <span>WorldPop 2026 Smallholder Demographics</span>
+            <span class="text-emerald-400 font-mono">184,200 Farmers</span>
+          </div>
+          <div class="text-slate-400 mt-0.5">42.1% Female-Headed farming households • 412/km² density</div>
+        </div>
+      </div>
+
+      <div class="text-right pt-2 border-t border-[#343535]">
+        <button onclick="closeModal('lakehouse-sources-drawer')" class="px-4 py-1.5 rounded-lg bg-[#323434] hover:bg-[#3c3e3e] text-slate-200 text-xs font-medium">
+          Close Inspector
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: LAKEHOUSE SQL & LOAN TABLE DRAWER -->
+  <div id="lakehouse-drawer" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-[#242525] border border-[#363838] rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-[#363838] pb-3">
+        <h3 class="font-bold text-base text-white">Silver Loans Lakehouse Ledger (Tenant: fcl_internal)</h3>
+        <button onclick="closeModal('lakehouse-drawer')" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-[#343535]">
+        <table class="w-full text-left text-xs font-mono">
+          <thead class="bg-[#1b1c1c] text-slate-400 border-b border-[#343535]">
+            <tr>
+              <th class="p-2.5">Loan ID</th>
+              <th class="p-2.5">Borrower Cooperative</th>
+              <th class="p-2.5">Outstanding</th>
+              <th class="p-2.5">DPD</th>
+              <th class="p-2.5">ΔNDVI</th>
+              <th class="p-2.5">Risk Score</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[#343535] text-slate-200">
+            <tr>
+              <td class="p-2.5 text-sky-400 font-bold">LN-2026-0891</td>
+              <td class="p-2.5">Githunguri Dairy & Coffee</td>
+              <td class="p-2.5">$38,500</td>
+              <td class="p-2.5 text-rose-400">64d</td>
+              <td class="p-2.5 text-rose-400">-0.21</td>
+              <td class="p-2.5 font-bold text-rose-300">88/100</td>
+            </tr>
+            <tr>
+              <td class="p-2.5 text-sky-400 font-bold">LN-2026-0744</td>
+              <td class="p-2.5">Limuru Smallholder Growers</td>
+              <td class="p-2.5">$18,200</td>
+              <td class="p-2.5 text-amber-400">32d</td>
+              <td class="p-2.5 text-rose-400">-0.16</td>
+              <td class="p-2.5 font-bold text-amber-300">72/100</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <div class="text-right">
-        <button onclick="closeSourceModal()" class="px-3 py-1.5 rounded-lg bg-[#343535] hover:bg-[#3e3f3f] text-slate-200 text-xs font-medium">
-          Close
+        <button onclick="closeModal('lakehouse-drawer')" class="px-4 py-1.5 rounded-lg bg-[#323434] hover:bg-[#3c3e3e] text-slate-200 text-xs font-medium">
+          Close Table
         </button>
       </div>
     </div>
   </div>
 
   <script>
-    let MAP = null;
+    let LEAFLET_MAP = null;
     let MAP_CIRCLE = null;
+    let IS_MAP_OPEN = false;
+
+    function toggleMapDrawer() {
+      const drawer = document.getElementById('map-drawer');
+      const label = document.getElementById('map-btn-label');
+      IS_MAP_OPEN = !IS_MAP_OPEN;
+
+      if (IS_MAP_OPEN) {
+        drawer.classList.remove('hidden');
+        label.textContent = 'Hide Satellite Map';
+        if (!LEAFLET_MAP) {
+          setTimeout(initLeaflet, 50);
+        } else {
+          setTimeout(() => LEAFLET_MAP.invalidateSize(), 50);
+        }
+      } else {
+        drawer.classList.add('hidden');
+        label.textContent = 'Open Satellite Map Canvas';
+      }
+    }
 
     function initLeaflet() {
-      MAP = L.map('pplx-map', {
+      LEAFLET_MAP = L.map('inline-map', {
         center: [-1.0314, 36.8681],
         zoom: 11,
         zoomControl: false,
@@ -418,7 +573,7 @@
       L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         subdomains: 'abcd',
         maxZoom: 19
-      }).addTo(MAP);
+      }).addTo(LEAFLET_MAP);
 
       MAP_CIRCLE = L.circle([-1.0314, 36.8681], {
         radius: 6500,
@@ -426,10 +581,10 @@
         fillColor: '#f43f5e',
         fillOpacity: 0.35,
         weight: 2
-      }).addTo(MAP);
+      }).addTo(LEAFLET_MAP);
     }
 
-    function handleScrub(val) {
+    function handleMapScrub(val) {
       if (!MAP_CIRCLE) return;
       const opacity = 0.15 + (val / 100) * 0.35;
       const radius = 4000 + (val / 100) * 3500;
@@ -437,95 +592,77 @@
       MAP_CIRCLE.setRadius(radius);
     }
 
-    function setFocus(focus) {
-      if (focus === 'climate') submitPreset('Summarize climate patterns and rainfall deficit for East Africa Q3 2026');
-      else if (focus === 'soil') submitPreset('Analyze soil pH and clay content in Kiambu');
-      else if (focus === 'loans') submitPreset('Show all overdue loans in northern region');
-      else if (focus === 'documents') submitPreset('Analyze field survey reports and policy conflicts');
-      else submitPreset('Assess vegetation change in Kiambu over last 90 days');
+    function openModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.remove('hidden');
     }
 
-    function submitPreset(text) {
-      document.getElementById('pplx-input').value = text;
-      handleUserSubmit();
+    function closeModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.add('hidden');
     }
 
-    function handleUserSubmit() {
-      const q = document.getElementById('pplx-input').value.trim();
+    function approveRestructuring() {
+      alert("Executive Sign-off Verified (Keren Obara - Level 4 Gate).\n\nRestructuring instruction dispatched for 4 Kiambu cooperatives ($56,700 exposure).\nMaturities extended by 90 days.");
+    }
+
+    function submitPrompt(text) {
+      document.getElementById('user-input').value = text;
+      handleSend();
+    }
+
+    function handleSend() {
+      const q = document.getElementById('user-input').value.trim();
       if (!q) return;
 
-      document.getElementById('query-heading').textContent = q;
-      document.getElementById('pplx-input').value = '';
+      document.getElementById('thread-title').textContent = q;
+      document.getElementById('user-input').value = '';
 
-      // Fly map to corresponding region if detected
-      if (q.toLowerCase().includes('gulu') || q.toLowerCase().includes('northern')) {
-        MAP.flyTo([2.7724, 32.2881], 10);
-        MAP_CIRCLE.setLatLng([2.7724, 32.2881]);
-      } else if (q.toLowerCase().includes('kisumu') || q.toLowerCase().includes('flood')) {
-        MAP.flyTo([-0.1650, 34.9150], 11);
-        MAP_CIRCLE.setLatLng([-0.1650, 34.9150]);
-        MAP_CIRCLE.setStyle({ color: '#38bdf8', fillColor: '#38bdf8' });
-      } else if (q.toLowerCase().includes('nakuru')) {
-        MAP.flyTo([-0.3031, 36.0800], 11);
-        MAP_CIRCLE.setLatLng([-0.3031, 36.0800]);
-        MAP_CIRCLE.setStyle({ color: '#10b981', fillColor: '#10b981' });
-      } else {
-        MAP.flyTo([-1.0314, 36.8681], 11);
-        MAP_CIRCLE.setLatLng([-1.0314, 36.8681]);
-        MAP_CIRCLE.setStyle({ color: '#f43f5e', fillColor: '#f43f5e' });
+      // Fly map if map is open
+      if (LEAFLET_MAP) {
+        if (q.toLowerCase().includes('northern') || q.toLowerCase().includes('gulu')) {
+          LEAFLET_MAP.flyTo([2.7724, 32.2881], 10);
+          MAP_CIRCLE.setLatLng([2.7724, 32.2881]);
+        } else if (q.toLowerCase().includes('kisumu') || q.toLowerCase().includes('flood')) {
+          LEAFLET_MAP.flyTo([-0.1650, 34.9150], 11);
+          MAP_CIRCLE.setLatLng([-0.1650, 34.9150]);
+          MAP_CIRCLE.setStyle({ color: '#007AFF', fillColor: '#007AFF' });
+        } else if (q.toLowerCase().includes('nakuru')) {
+          LEAFLET_MAP.flyTo([-0.3031, 36.0800], 11);
+          MAP_CIRCLE.setLatLng([-0.3031, 36.0800]);
+          MAP_CIRCLE.setStyle({ color: '#10b981', fillColor: '#10b981' });
+        } else {
+          LEAFLET_MAP.flyTo([-1.0314, 36.8681], 11);
+          MAP_CIRCLE.setLatLng([-1.0314, 36.8681]);
+          MAP_CIRCLE.setStyle({ color: '#f43f5e', fillColor: '#f43f5e' });
+        }
       }
 
-      // Smooth scroll to top of thread
-      document.getElementById('thread-scroll').scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById('thread-container').scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function openSourceModal(srcId) {
-      const modal = document.getElementById('source-modal');
-      const badge = document.getElementById('modal-badge');
-      const title = document.getElementById('modal-title');
-      const sub = document.getElementById('modal-sub');
-      const body = document.getElementById('modal-body');
+    function switchCategory(cat) {
+      ['satellite', 'climate', 'soil', 'loans', 'documents'].forEach(c => {
+        const btn = document.getElementById(`nav-${c}`);
+        if (!btn) return;
+        if (c === cat) {
+          btn.className = "w-full flex items-center gap-3 px-2.5 py-2 rounded-xl bg-[#272828] text-white text-xs font-medium border border-[#363838]/70";
+        } else {
+          btn.className = "w-full flex items-center gap-3 px-2.5 py-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-[#202222] text-xs font-medium transition";
+        }
+      });
 
-      if (srcId === 'src-copernicus') {
-        badge.textContent = "Source 1";
-        title.textContent = "Copernicus Sentinel-2 L2A Optical STAC";
-        sub.textContent = "Element84 STAC API • 10m Ground Sampling Distance";
-        body.innerHTML = "<div>• Scene: S2B_MSIL2A_20261019T074619</div><div>• Acquired: 2026-10-19T07:46:19Z</div><div>• Cloud Cover: 8.4% (Canopy Clear)</div><div>• Deterministic ΔNDVI: -0.19</div>";
-      } else if (srcId === 'src-nasapower') {
-        badge.textContent = "Source 2";
-        title.textContent = "NASA POWER Agroclimatology & NOAA Synoptic";
-        sub.textContent = "NASA Langley Research Center • Daily Ag MERRA-2";
-        body.innerHTML = "<div>• 90-Day Rain: 112.4mm vs 218.0mm Norm (-48.4%)</div><div>• SPI-3 Drought Class: Severe Drought (-1.48)</div><div>• Ground Gauge: HKJK (Nairobi Synoptic) R²=0.94</div>";
-      } else if (srcId === 'src-soilgrids') {
-        badge.textContent = "Source 6";
-        title.textContent = "ISRIC SoilGrids 250m Global Atlas";
-        sub.textContent = "ISRIC World Soil Information • Depth 0-30cm";
-        body.innerHTML = "<div>• Classification: Humic Nitisols</div><div>• Topsoil pH (H₂O): 5.6 (Moderately Acidic)</div><div>• SOC Stock: 24.2 g/kg</div><div>• Texture: Clay 52%, Sand 22%, Silt 26%</div>";
-      } else {
-        badge.textContent = "Source 5";
-        badge.className = "px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono text-xs font-bold";
-        title.textContent = "October 2026 Field Survey vs FCL Policy v4.0";
-        sub.textContent = "Enterprise Knowledge Plane • Conflict #CONF-04";
-        body.innerHTML = "<div>• DOC-2026-OCT-01 (p. 29): Wilting confirmed at NDVI ≤ 0.45</div><div>• DOC-2026-POL-04 (p. 14): Policy trigger set at NDVI ≤ 0.35</div><div>• Uninsured Gap: 3,430 cooperative smallholder plots</div>";
-      }
-
-      modal.classList.remove('hidden');
+      if (cat === 'climate') submitPrompt('Summarize rainfall anomalies and drought severity across East Africa Q3 2026');
+      else if (cat === 'soil') submitPrompt('Analyze soil pH, organic carbon stock, and texture in Kiambu');
+      else if (cat === 'loans') submitPrompt('Show all overdue loans in Northern region');
+      else if (cat === 'documents') submitPrompt('Cross-compare October 2026 field survey with FCL policy v4.0');
+      else submitPrompt('What changed in Kiambu District in the last 90 days?');
     }
 
-    function closeSourceModal() {
-      document.getElementById('source-modal').classList.add('hidden');
+    function resetThread() {
+      document.getElementById('thread-title').textContent = "Ask anything about your satellite data, climate, or loans";
+      document.getElementById('user-input').value = '';
     }
-
-    function toggleSqlModal() {
-      alert("SELECT district_name, ndvi_90d_prior, ndvi_current, ndvi_delta, rainfall_anomaly_pct, soil_ph FROM silver_districts WHERE district_id = 'kiambu';\n\n-- Verified zero cross-tenant row leakage (tenant_id = 'fcl_internal')");
-    }
-
-    function resetToWelcome() {
-      document.getElementById('query-heading').textContent = "Ask anything about your satellite data, climate, or loans";
-      document.getElementById('pplx-input').value = '';
-    }
-
-    window.addEventListener('DOMContentLoaded', initLeaflet);
   </script>
 </body>
 </html>
