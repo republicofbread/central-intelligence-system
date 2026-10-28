@@ -611,32 +611,175 @@
       handleSend();
     }
 
-    function handleSend() {
-      const q = document.getElementById('user-input').value.trim();
+    async function handleSend() {
+      const inputEl = document.getElementById('user-input');
+      const q = inputEl.value.trim();
       if (!q) return;
 
+      inputEl.value = '';
       document.getElementById('thread-title').textContent = q;
-      document.getElementById('user-input').value = '';
 
-      // Fly map if map is open
-      if (LEAFLET_MAP) {
-        if (q.toLowerCase().includes('northern') || q.toLowerCase().includes('gulu')) {
-          LEAFLET_MAP.flyTo([2.7724, 32.2881], 10);
-          MAP_CIRCLE.setLatLng([2.7724, 32.2881]);
-        } else if (q.toLowerCase().includes('kisumu') || q.toLowerCase().includes('flood')) {
-          LEAFLET_MAP.flyTo([-0.1650, 34.9150], 11);
-          MAP_CIRCLE.setLatLng([-0.1650, 34.9150]);
-          MAP_CIRCLE.setStyle({ color: '#007AFF', fillColor: '#007AFF' });
-        } else if (q.toLowerCase().includes('nakuru')) {
-          LEAFLET_MAP.flyTo([-0.3031, 36.0800], 11);
-          MAP_CIRCLE.setLatLng([-0.3031, 36.0800]);
-          MAP_CIRCLE.setStyle({ color: '#10b981', fillColor: '#10b981' });
-        } else {
-          LEAFLET_MAP.flyTo([-1.0314, 36.8681], 11);
-          MAP_CIRCLE.setLatLng([-1.0314, 36.8681]);
-          MAP_CIRCLE.setStyle({ color: '#f43f5e', fillColor: '#f43f5e' });
-        }
+      // Show Perplexity typing status indicator
+      const textBody = document.querySelector('#thread-container > .space-y-4');
+      const originalHtml = textBody.innerHTML;
+      
+      textBody.innerHTML = `
+        <div class="flex items-center gap-2.5 py-4 text-xs font-mono text-slate-400">
+          <span class="w-3 h-3 rounded-full border-2 border-[#06c3f4] border-t-transparent animate-spin"></span>
+          <span>Searching 20 spaceborne and lakehouse sources for "${q}"...</span>
+        </div>
+      `;
+
+      // Resolve AOI and ground truth data
+      const qLower = q.toLowerCase();
+      let aoi = {
+        name: "Kiambu District (Kenya)",
+        center: [-1.0314, 36.8681],
+        ndvi_before: 0.68, ndvi_after: 0.49, delta: -0.19,
+        rain: "112.4mm vs 218.0mm Norm (-48.4%)",
+        spi: -1.48, drought: "Severe Agricultural Drought",
+        ph: 5.6, soil_type: "Humic Nitisols (Clay 52%)",
+        aet: 1.82, deficit: 38.4,
+        exposure: "$56,700 (4 cooperative loans)",
+        farmers: "184,200", female: "42.1%",
+        fires: 4, fire_alert: "Controlled Agricultural Burning"
+      };
+
+      if (qLower.includes('northern') || qLower.includes('gulu') || qLower.includes('lira') || qLower.includes('kitgum') || qLower.includes('overdue')) {
+        aoi = {
+          name: "Northern Region Agro-Corridor (Gulu, Lira, Kitgum)",
+          center: [2.7724, 32.2881],
+          ndvi_before: 0.64, ndvi_after: 0.46, delta: -0.18,
+          rain: "164.0mm vs 265.0mm Norm (-38.1%)",
+          spi: -1.22, drought: "Moderate-to-Severe Deficit",
+          ph: 6.2, soil_type: "Plinthic Ferralsols (Clay 38%)",
+          aet: 2.15, deficit: 41.2,
+          exposure: "$148,200 (12 cooperative facilities)",
+          farmers: "312,500", female: "46.8%",
+          fires: 18, fire_alert: "Active Stubble Burning & Clearing"
+        };
+      } else if (qLower.includes('kisumu') || qLower.includes('nyando') || qLower.includes('flood') || qLower.includes('rice')) {
+        aoi = {
+          name: "Kisumu / Nyando River Basin & Rice Irrigation Scheme",
+          center: [-0.1650, 34.9150],
+          ndvi_before: 0.62, ndvi_after: 0.51, delta: -0.11,
+          rain: "388.2mm vs 295.0mm Norm (+31.6%)",
+          spi: +1.86, drought: "Inundation High Water (No Drought)",
+          ph: 6.8, soil_type: "Pellic Vertisols (Heavy Black Cotton)",
+          aet: 4.12, deficit: 0.0,
+          exposure: "$82,000 (Inundation Risk Monitoring)",
+          farmers: "228,000", female: "48.2%",
+          fires: 0, fire_alert: "Nil (Saturated Flood Basin)"
+        };
+      } else if (qLower.includes('nakuru') || qLower.includes('rift') || qLower.includes('grain') || qLower.includes('wheat')) {
+        aoi = {
+          name: "Rift Valley / Nakuru & Uasin Gishu Grain Basket",
+          center: [-0.3031, 36.0800],
+          ndvi_before: 0.70, ndvi_after: 0.63, delta: -0.07,
+          rain: "236.0mm vs 252.0mm Norm (-6.3%)",
+          spi: -0.92, drought: "Mild Moisture Deficit",
+          ph: 6.4, soil_type: "Mollic Andosols (Volcanic Ash)",
+          aet: 3.45, deficit: 16.2,
+          exposure: "$24,500 (Low Delinquency Risk)",
+          farmers: "195,000", female: "39.4%",
+          fires: 2, fire_alert: "Controlled Stubble Management"
+        };
       }
+
+      // Fly Leaflet Map smoothly
+      if (LEAFLET_MAP) {
+        LEAFLET_MAP.flyTo(aoi.center, 10, { duration: 1.2 });
+        MAP_CIRCLE.setLatLng(aoi.center);
+        MAP_CIRCLE.setStyle({ color: aoi.delta <= -0.15 ? '#f43f5e' : (aoi.deficit === 0 ? '#007AFF' : '#10b981') });
+      }
+
+      // Simulate Perplexity token generation latency (350ms)
+      await new Promise(r => setTimeout(r, 350));
+
+      // Build specialized conversational narrative grounded in live features
+      let narrative = "";
+      if (qLower.includes('fire') || qLower.includes('firms') || qLower.includes('thermal') || qLower.includes('burn')) {
+        narrative = `
+          <p>
+            Near-real-time spaceborne radiometry from <strong class="text-white">NASA FIRMS (VIIRS 375m & MODIS 1km)</strong> 
+            records <strong class="${aoi.fires > 10 ? 'text-rose-400' : 'text-emerald-400'} font-semibold">${aoi.fires} active thermal fire anomalies</strong> 
+            over the past 24 hours across <strong class="text-white">${aoi.name}</strong> <span class="pplx-cite" onclick="openModal('lakehouse-sources-drawer')">7</span>.
+          </p>
+          <p>
+            Thermal cluster analysis indicates <strong class="text-white">${aoi.fire_alert}</strong>. Cross-referencing with Copernicus Sentinel-2 Short-Wave Infrared (SWIR Band 12) confirms that ${aoi.fires > 10 ? 'stubble clearing is encroaching on dry seasonal pastures, generating localized particulate smoke and collateral crop risk' : 'thermal energy remains well below dangerous wildfire thresholds'}.
+          </p>
+        `;
+      } else if (qLower.includes('soil') || qLower.includes('ph') || qLower.includes('clay') || qLower.includes('soc')) {
+        narrative = `
+          <p>
+            Digital soil mapping from the <strong class="text-white">ISRIC SoilGrids 250m Global Atlas</strong> establishes that 
+            farmlands in <strong class="text-white">${aoi.name}</strong> are underlain by <strong class="text-white">${aoi.soil_type}</strong> 
+            with topsoil pH in H₂O recorded at <strong class="text-sky-400 font-semibold">${aoi.ph}</strong> <span class="pplx-cite" onclick="openModal('lakehouse-sources-drawer')">6</span>.
+          </p>
+          <p>
+            Root-zone moisture capacity is currently assessed at <strong class="text-amber-400 font-semibold">${100 - aoi.deficit}% of field capacity</strong>. While clay content provides substantial nutrient buffering, the 90-day rainfall anomaly (${aoi.rain}) requires strict micro-dosing and moisture conservation tillage.
+          </p>
+        `;
+      } else if (qLower.includes('flood') || qLower.includes('river') || qLower.includes('glofas') || qLower.includes('inundation')) {
+        narrative = `
+          <p>
+            Hydrological discharge monitoring via <strong class="text-white">Copernicus GloFAS (Global Flood Awareness System)</strong> 
+            and <strong class="text-white">Sentinel-1 C-Band SAR radar backscatter</strong> indicates 
+            <strong class="${aoi.deficit === 0 ? 'text-sky-400' : 'text-emerald-400'} font-semibold">${aoi.drought}</strong> across <strong class="text-white">${aoi.name}</strong> <span class="pplx-cite" onclick="openModal('satellite-sources-drawer')">1</span>.
+          </p>
+          <p>
+            Observed 90-day precipitation stands at <strong class="text-white">${aoi.rain}</strong>. Synthetic Aperture Radar (VV/VH polarization) verifies ${aoi.deficit === 0 ? 'active standing water masks across lower floodplain paddy fields, creating acute inundation hazards' : 'zero surface water accumulation across monitored agricultural plots'}.
+          </p>
+        `;
+      } else if (qLower.includes('loan') || qLower.includes('overdue') || qLower.includes('credit') || qLower.includes('finance')) {
+        narrative = `
+          <p>
+            Deterministic query against the <strong class="text-white">FCL Gold Lakehouse</strong> (strictly partitioned to tenant <code class="text-sky-300 font-mono text-xs">fcl_internal</code>) 
+            identifies <strong class="text-rose-400 font-semibold">${aoi.exposure}</strong> currently classified as overdue <span class="pplx-cite" onclick="openModal('lakehouse-drawer')">4</span>.
+          </p>
+          <p>
+            AgriScore-Gradient-v3 default risk scoring confirms environmental shock is the primary driver (ΔNDVI ${aoi.delta >= 0 ? '+' : ''}${aoi.delta}, rain anomaly ${aoi.rain}). Recommended action: dispatch human loan officer review and execute a 90-day seasonal restructuring.
+          </p>
+        `;
+      } else {
+        narrative = `
+          <p>
+            Over the past 90 days, multi-temporal analysis across <strong class="text-white">${aoi.name}</strong> 
+            establishes an environmental trajectory with Copernicus <strong class="text-white">Sentinel-2 L2A optical sensors</strong> 
+            recording a vegetation change of <strong class="${aoi.delta <= -0.15 ? 'text-rose-400' : 'text-emerald-400'} font-semibold">ΔNDVI = ${aoi.delta >= 0 ? '+' : ''}${aoi.delta}</strong> 
+            (from ${aoi.ndvi_before} to ${aoi.ndvi_after}) <span class="pplx-cite" onclick="openModal('satellite-sources-drawer')">1</span>.
+          </p>
+          <p>
+            Precipitation cross-validation against the NOAA station network and CHIRPS 40-year climatology confirms a rainfall series of 
+            <strong class="text-white">${aoi.rain}</strong> (${aoi.drought}) <span class="pplx-cite" onclick="openModal('lakehouse-sources-drawer')">2</span>. 
+            Topsoil pedology via <strong class="text-white">ISRIC SoilGrids</strong> resolves <strong class="text-white">${aoi.soil_type}</strong> (pH ${aoi.ph}).
+          </p>
+        `;
+      }
+
+      // Inject generated stream
+      textBody.innerHTML = `
+        ${narrative}
+
+        <!-- 3 COMPACT STAT PILLS -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+          <div class="p-3 rounded-xl bg-[#262727] border border-[#343535]">
+            <div class="text-[11px] font-mono text-slate-400 uppercase">Exposure at Risk</div>
+            <div class="text-lg font-bold font-mono text-white mt-0.5">${aoi.exposure}</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">AgriScore Risk Engine</div>
+          </div>
+          <div class="p-3 rounded-xl bg-[#262727] border border-[#343535]">
+            <div class="text-[11px] font-mono text-slate-400 uppercase">Water Deficit (WaPOR)</div>
+            <div class="text-lg font-bold font-mono text-amber-400 mt-0.5">${aoi.deficit}% Deficit</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">AET: ${aoi.aet} mm/day</div>
+          </div>
+          <div class="p-3 rounded-xl bg-[#262727] border border-[#343535]">
+            <div class="text-[11px] font-mono text-slate-400 uppercase">Smallholder Cohort</div>
+            <div class="text-lg font-bold font-mono text-emerald-400 mt-0.5">${aoi.farmers} Farmers</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">${aoi.female} Female-Headed</div>
+          </div>
+        </div>
+      `;
 
       document.getElementById('thread-container').scrollTo({ top: 0, behavior: 'smooth' });
     }
