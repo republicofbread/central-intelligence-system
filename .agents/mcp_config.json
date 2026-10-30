@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "google-earth-engine": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "earth-engine-mcp"
+      ],
+      "env": {
+        "PATH": "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+        "EARTH_ENGINE_PRIVATE_KEY": "/Users/jonathankilega/.gemini/antigravity/scratch/fcl-central-intelligence-system/.agents/keys/earth-engine-key.json",
+        "GOOGLE_APPLICATION_CREDENTIALS": "/Users/jonathankilega/.gemini/antigravity/scratch/fcl-central-intelligence-system/.agents/keys/earth-engine-key.json",
+        "GOOGLE_CLOUD_PROJECT": "fcl-bloomtech-gis",
+        "EARTH_ENGINE_PROJECT": "fcl-bloomtech-gis"
+      }
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "PATH": "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+        "GITHUB_PERSONAL_ACCESS_TOKEN": ""
+      }
+    }
+  }
+}
