@@ -1,0 +1,3 @@
+# Ignore sensitive Google Cloud / Earth Engine credentials
+*.json
+!earth-engine-key.template.json
